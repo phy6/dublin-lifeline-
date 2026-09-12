@@ -64,3 +64,74 @@
   --chip: #eef2f6;
   --shadow: 0 2px 12px rgba(0,0,0,.10);
 }
+
+/* Guide Accordion */
+.guide-acc {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.guide-acc summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 14px 16px;
+  color: var(--accent);
+  font-size: 1.05rem;
+  list-style: none;
+}
+.guide-acc summary::-webkit-details-marker { display: none; }
+.guide-acc[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+.guide-acc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.guide-acc li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.guide-acc li:last-child {
+  border-bottom: none;
+}
+.guide-acc li strong {
+  color: var(--text);
+}
+.guide-acc .guide-hours {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.guide-acc .guide-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.guide-acc .guide-services span {
+  background: var(--chip);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.guide-pathways-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.guide-pathways-item:last-child {
+  border-bottom: none;
+}
+.guide-pathways-item strong {
+  color: var(--text);
+}
+.guide-pathways-item .guide-pathways-detail {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
