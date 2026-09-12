@@ -1,1 +1,79 @@
-{"version": "1.0.0", "generatedAt": "2026-09-13T06:00:00Z", "discoverySource": "Dublin charity directories", "candidates": [{"name": "Peter McVerry Trust", "url": "https://www.petermcverrytrust.org/", "source": "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/", "discoveredAt": "2026-09-13T06:00:00Z", "status": "pending"}, {"name": "COPE Ireland", "url": "https://www.copeireland.ie/", "source": "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/", "discoveredAt": "2026-09-13T06:00:00Z", "status": "pending"}, {"name": "Simon Community Employment", "url": "https://www.simoncommunity.ie/employment/", "source": "https://www.charitynavigator.org/search?q=dublin&country=IE", "discoveredAt": "2026-09-13T06:00:00Z", "status": "pending"}], "discoveryConfig": {"urls": ["https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/", "https://www.charitynavigator.org/search?q=dublin&country=IE", "https://www.chaarities.ie/", "https://www.alone.ie/", "https://www.siara.org/", "https://www.dublincare.org/", "https://www.corkcitycommunity.org/"], "selectors": {"name": ["h2 a", ".org-name", ".listing-title", ".title a", "h3 a"], "url": ["a[href]", ".org-link", ".listing-url", "h2 a"], "description": [".description", ".summary", ".listing-description", ".org-description", "p"], "phone": ["a[href^=\"tel\"]", ".phone", ".contact-phone"], "category": [".category", ".tag", ".service-type", ".org-category"], "address": [".address", ".location", ".org-address"]}, "interval": 60000, "maxResults": 50}}
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-09-12T22:02:41.997Z",
+  "discoverySource": "Dublin charity directories",
+  "candidates": [
+    {
+      "name": "Peter McVerry Trust",
+      "url": "https://www.petermcverrytrust.org/",
+      "source": "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/",
+      "discoveredAt": "2026-09-12T22:02:41.997Z",
+      "status": "pending"
+    },
+    {
+      "name": "COPE Ireland",
+      "url": "https://www.copeireland.ie/",
+      "source": "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/",
+      "discoveredAt": "2026-09-12T22:02:41.997Z",
+      "status": "pending"
+    },
+    {
+      "name": "Simon Community Employment",
+      "url": "https://www.simoncommunity.ie/employment/",
+      "source": "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/",
+      "discoveredAt": "2026-09-12T22:02:41.997Z",
+      "status": "pending"
+    }
+  ],
+  "discoveryConfig": {
+    "urls": [
+      "https://www.dublincity.ie/living-here/community-and-volunteering/voluntary-organisations/",
+      "https://www.charitynavigator.org/search?q=dublin&country=IE",
+      "https://www.chaarities.ie/",
+      "https://www.alone.ie/",
+      "https://www.siara.org/",
+      "https://www.dublincare.org/",
+      "https://www.corkcitycommunity.org/"
+    ],
+    "selectors": {
+      "name": [
+        "h2 a",
+        ".org-name",
+        ".listing-title",
+        ".title a",
+        "h3 a"
+      ],
+      "url": [
+        "a[href]",
+        ".org-link",
+        ".listing-url",
+        "h2 a"
+      ],
+      "description": [
+        ".description",
+        ".summary",
+        ".listing-description",
+        ".org-description",
+        "p"
+      ],
+      "phone": [
+        "a[href^=\"tel\"]",
+        ".phone",
+        ".contact-phone"
+      ],
+      "category": [
+        ".category",
+        ".tag",
+        ".service-type",
+        ".org-category"
+      ],
+      "address": [
+        ".address",
+        ".location",
+        ".org-address"
+      ]
+    },
+    "interval": 60000,
+    "maxResults": 50
+  }
+}
