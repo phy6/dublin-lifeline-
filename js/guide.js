@@ -24,7 +24,7 @@ const GUIDE_SECTIONS = {
   education: {
     id: 'guideEducationContent',
     heading: '📚 Libraries & Free Workspaces',
-    filter: p => (p.tags || []).includes('education') || (p.tags || []).includes('library')
+    filter: p => (p.tags || []).includes('education') || (p.tags || []).includes('library') || (p.services || []).includes('education') || (p.services || []).includes('employment') || (p.services || []).includes('training')
   }
 };
 

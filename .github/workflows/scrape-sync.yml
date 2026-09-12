@@ -37,8 +37,8 @@ jobs:
 
       - name: Validate configuration
         run: |
-          node -e "const c = require('./config/sources.json'); console.log('Loaded', c.targets.length, 'targets');"
-          node -e "const d = require('./data/services.json'); console.log('Baseline has', d.services.length, 'services');"
+          node --input-type=module -e "import fs from 'fs'; const c = JSON.parse(fs.readFileSync('./config/sources.json','utf8')); console.log('Loaded', c.targets.length, 'targets');"
+          node --input-type=module -e "import fs from 'fs'; const d = JSON.parse(fs.readFileSync('./data/services.json','utf8')); console.log('Baseline has', d.services.length, 'services');"
 
       - name: Run scraper
         id: scrape
@@ -50,8 +50,9 @@ jobs:
 
       - name: Check scrape results
         run: |
-          node -e "
-            const s = require('./data/scraped_output.json');
+          node --input-type=module -e "
+            import fs from 'fs';
+            const s = JSON.parse(fs.readFileSync('./data/scraped_output.json','utf8'));
             console.log('Successful:', s.successful + '/' + s.totalTargets);
             if (s.failed > 0) {
               console.log('Failed targets:', s.errors.map(e => e.name).join(', '));
@@ -69,8 +70,9 @@ jobs:
       - name: Generate merge summary
         id: summary
         run: |
-          node -e "
-            const r = require('./data/merge_report.json');
+          node --input-type=module -e "
+            import fs from 'fs';
+            const r = JSON.parse(fs.readFileSync('./data/merge_report.json','utf8'));
             const { additions, updates, deletions } = r.mergeStats;
             console.log('::set-output name=additions::' + additions);
             console.log('::set-output name=updates::' + updates);

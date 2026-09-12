@@ -601,7 +601,9 @@ async function main() {
   process.exit(0);
 }
 
-main().catch(err => {
-  console.error('[Scraper] Fatal error:', err);
-  process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch(err => {
+    console.error('[Scraper] Fatal error:', err);
+    process.exit(1);
+  });
+}

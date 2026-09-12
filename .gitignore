@@ -1,0 +1,8 @@
+node_modules/
+data/scraped_output.json
+data/merge_report.json
+data/candidates.json
+.env
+.DS_Store
+*.log
+.superpowers/
