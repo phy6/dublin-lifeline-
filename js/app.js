@@ -26,6 +26,7 @@ class DublinLifelineApp {
     this.setupNavigation();
     await this.initModules();
     this.handleRoute();
+    this.setupOfflineIndicator();
     this.registerServiceWorker();
   }
 
@@ -87,6 +88,15 @@ btn.addEventListener('click', () => {
     window.addEventListener('load', () => this.handleRoute());
   }
 
+  setupOfflineIndicator() {
+    const indicator = document.getElementById('offlineIndicator');
+    if (!indicator) return;
+    const update = () => { indicator.style.display = navigator.onLine ? 'none' : 'block'; };
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    update();
+  }
+
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').then(reg => {
@@ -98,3 +108,11 @@ btn.addEventListener('click', () => {
 
 const app = new DublinLifelineApp();
 window.DublinLifelineApp = { init: () => app.init() };
+
+if (sessionStorage.redirect) {
+  const redirect = sessionStorage.redirect;
+  delete sessionStorage.redirect;
+  if (redirect !== location.href) history.replaceState(null, '', redirect);
+}
+
+document.addEventListener('DOMContentLoaded', () => app.init());

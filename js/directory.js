@@ -22,6 +22,8 @@ export function init() {
 export function renderCards(providers) {
     const cardsContainer = document.getElementById('cards');
     if (!cardsContainer) return;
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    if (loadingIndicator) loadingIndicator.style.display = 'none';
     cardsContainer.innerHTML = '';
 
     if (markersLayer) {
