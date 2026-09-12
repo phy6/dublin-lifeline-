@@ -1,0 +1,444 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-09-12",
+  "targets": [
+    {
+      "id": "capuchin-day-centre",
+      "name": "Capuchin Day Centre",
+      "url": "https://capuchindaycentre.ie/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Capuchin Day Centre",
+        "address": "29 Bow St, Dublin 7",
+        "phone": "+353-1-878-0404",
+        "hours": {
+          "mon-fri": "08:30-15:30",
+          "sat": "09:00-13:00",
+          "sun": "closed"
+        },
+        "email": "info@capuchindaycentre.ie",
+        "website": "https://capuchindaycentre.ie",
+        "services": [
+          "food",
+          "shelter",
+          "medical",
+          "counselling"
+        ],
+        "tags": [
+          "homeless",
+          "emergency",
+          "food"
+        ],
+        "category": "Emergency Shelter",
+        "latitude": 53.3481,
+        "longitude": -6.2758
+      }
+    },
+    {
+      "id": "merchants-quay-ireland",
+      "name": "Merchants Quay Ireland",
+      "url": "https://mqi.ie/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Merchants Quay Ireland",
+        "address": "8 Merchants Quay, Dublin 8",
+        "phone": "+353-1-874-3805",
+        "hours": {
+          "mon-fri": "09:00-17:00"
+        },
+        "email": "info@mqi.ie",
+        "website": "https://mqi.ie",
+        "services": [
+          "addiction",
+          "recovery",
+          "support"
+        ],
+        "tags": [
+          "addiction",
+          "recovery",
+          "harm-reduction"
+        ],
+        "category": "Addiction Support",
+        "latitude": 53.3449,
+        "longitude": -6.2733
+      }
+    },
+    {
+      "id": "focus-ireland",
+      "name": "Focus Ireland",
+      "url": "https://www.focusireland.ie/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Focus Ireland",
+        "address": "218-222 Phibsborough Road, Dublin 7",
+        "phone": "+353-1-885-5900",
+        "hours": {
+          "mon-fri": "09:00-17:30"
+        },
+        "email": "info@focusireland.ie",
+        "website": "https://www.focusireland.ie",
+        "services": [
+          "homelessness",
+          "housing",
+          "support"
+        ],
+        "tags": [
+          "homelessness",
+          "housing"
+        ],
+        "category": "Housing Support",
+        "latitude": 53.3592,
+        "longitude": -6.2742
+      }
+    },
+    {
+      "id": "dublin-simon-community",
+      "name": "Dublin Simon Community",
+      "url": "https://www.dubsimon.ie/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Dublin Simon Community",
+        "address": "85 Capel Street, Dublin 1",
+        "phone": "+353-1-674-5656",
+        "hours": {
+          "mon-fri": "09:00-17:30"
+        },
+        "email": "info@dubsimon.ie",
+        "website": "https://www.dubsimon.ie",
+        "services": [
+          "homelessness",
+          "emergency",
+          "accommodation"
+        ],
+        "tags": [
+          "homelessness",
+          "emergency",
+          "accommodation"
+        ],
+        "category": "Emergency Shelter",
+        "latitude": 53.3496,
+        "longitude": -6.2687
+      }
+    },
+    {
+      "id": "samaritans-ireland",
+      "name": "Samaritans Ireland",
+      "url": "https://www.samaritans.org/ireland/samaritans-ireland/",
+      "selectors": {
+        "phone": [
+          ".helpline-number",
+          ".phone-number",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location",
+          "[itemprop=\"address\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "description": [
+          ".about-text",
+          ".mission"
+        ]
+      },
+      "fallback": {
+        "name": "Samaritans Ireland",
+        "address": "191 Great Denmark Street, Dublin 1",
+        "phone": "+353-1-677-3333",
+        "hours": {
+          "mon-sun": "09:00-21:00"
+        },
+        "email": "dublin@samaritans.ie",
+        "website": "https://www.samaritans.org/ireland/samaritans-ireland/",
+        "services": [
+          "mental-health",
+          "crisis-support",
+          "suicide-prevention"
+        ],
+        "tags": [
+          "crisis",
+          "mental-health",
+          "helpline"
+        ],
+        "category": "Crisis Support",
+        "latitude": 53.3556,
+        "longitude": -6.2558
+      }
+    },
+    {
+      "id": "crosscare",
+      "name": "Crosscare",
+      "url": "https://crosscare.ie/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Crosscare",
+        "address": "127 Parnell Square West, Dublin 1",
+        "phone": "+353-1-874-1919",
+        "hours": {
+          "mon-fri": "09:00-17:00"
+        },
+        "email": "info@crosscare.ie",
+        "website": "https://crosscare.ie",
+        "services": [
+          "elderly",
+          "community",
+          "support"
+        ],
+        "tags": [
+          "elderly",
+          "community",
+          "support"
+        ],
+        "category": "Community Support",
+        "latitude": 53.3533,
+        "longitude": -6.2625
+      }
+    },
+    {
+      "id": "mendicity-institution",
+      "name": "Mendicity Institution",
+      "url": "https://www.mendicity.org/",
+      "selectors": {
+        "phone": [
+          ".contact-phone",
+          "tel a",
+          "a[href^=\"tel\"]"
+        ],
+        "address": [
+          ".address",
+          ".location-address",
+          "[itemprop=\"streetAddress\"]"
+        ],
+        "hours": [
+          ".opening-hours",
+          ".hours",
+          "[itemprop=\"openingHours\"]"
+        ],
+        "email": [
+          ".contact-email",
+          "a[href^=\"mailto\"]"
+        ],
+        "website": [
+          ".website-link",
+          "a[href^=\"http\"]:not([href^=\"mailto\"]):not([href^=\"tel\"])"
+        ],
+        "description": [
+          ".services-description",
+          ".about-text",
+          ".mission-statement"
+        ]
+      },
+      "fallback": {
+        "name": "Mendicity Institution",
+        "address": "115 Usher's Island, Dublin 8",
+        "phone": "+353-1-677-3939",
+        "hours": {
+          "mon-fri": "09:00-17:00"
+        },
+        "email": "info@mendicity.org",
+        "website": "https://www.mendicity.org",
+        "services": [
+          "elderly",
+          "community",
+          "social"
+        ],
+        "tags": [
+          "elderly",
+          "community",
+          "social"
+        ],
+        "category": "Community Support",
+        "latitude": 53.3461,
+        "longitude": -6.2818
+      }
+    }
+  ],
+  "globalSelectors": {
+    "hours": [
+      ".opening-hours",
+      ".hours",
+      "[itemprop=\"openingHours\"]",
+      "time[datetime]"
+    ],
+    "address": [
+      ".address",
+      ".location",
+      "[itemprop=\"streetAddress\"]",
+      "[itemprop=\"address\"]"
+    ],
+    "phone": [
+      "a[href^=\"tel\"]",
+      ".phone",
+      ".phone-number",
+      "[itemprop=\"telephone\"]"
+    ],
+    "email": [
+      "a[href^=\"mailto\"]",
+      ".email",
+      "[itemprop=\"email\"]"
+    ]
+  },
+  "rateLimit": {
+    "requestsPerMinute": 10,
+    "timeout": 15000,
+    "retryAttempts": 3,
+    "retryDelay": 2000
+  },
+  "schedule": {
+    "cron": "0 6 * * 1",
+    "timezone": "Europe/Dublin"
+  }
+}

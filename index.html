@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Dublin essential charity, clothing, study library, and support guide.">
+<title>Dublin Lifeline Directory</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{
+  --bg:#f7f8fa; --panel:#fff; --text:#101318; --muted:#505a66; --line:#c7cdd4;
+  --accent:#005fcc; --accent2:#007a45; --danger:#b00020; --warn:#9a4d00;
+  --chip:#eef2f6; --shadow:0 2px 12px rgba(0,0,0,.10);
+}
+[data-theme="dark"]{
+  --bg:#0d1117; --panel:#151b23; --text:#f4f7fa; --muted:#b8c1cb; --line:#38424d;
+  --accent:#62a8ff; --accent2:#4ee09b; --danger:#ff6d7a; --warn:#ffc266;
+  --chip:#202934; --shadow:0 2px 14px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px}
+body{padding-bottom:28px}
+button,a,input,select,textarea{font:inherit}
+a{color:var(--accent)}
+
+.emergency{
+  position:sticky;top:0;z-index:2000;background:var(--danger);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;
+  font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.2)
+}
+.emergency a{color:#fff;text-decoration:none;white-space:nowrap;border:2px solid #fff;border-radius:8px;padding:7px 10px}
+
+header{max-width:1100px;margin:auto;padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand h1{font-size:1.35rem;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.icon-btn{border:2px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 11px;cursor:pointer}
+
+main{max-width:1100px;margin:auto;padding:0 14px}
+
+.nav-tabs{display:flex;gap:6px;margin:8px 0 12px;background:var(--chip);padding:4px;border-radius:12px}
+.tab-btn{flex:1;border:0;background:transparent;color:var(--muted);padding:10px;border-radius:8px;font-weight:800;cursor:pointer;text-align:center;font-size:.88rem}
+.tab-btn.active{background:var(--panel);color:var(--accent);box-shadow:var(--shadow)}
+
+.page-view{display:none}
+.page-view.active{display:block}
+
+.hero{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;margin:8px 0 12px}
+.hero button{
+  border:0;border-radius:16px;min-height:95px;padding:14px;text-align:left;cursor:pointer;
+  color:#fff;box-shadow:var(--shadow);font-weight:900
+}
+.hero .meal{background:#087a3b}.hero .parcel{background:#075bbb}.hero .clothing{background:#9a4d00}.hero .library{background:#6b21a8}
+.hero .emoji{font-size:1.8rem;display:block}.hero strong{display:block;font-size:1.1rem}.hero small{font-weight:600;opacity:.92}
+
+.location{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);
+  background:var(--panel);border-radius:12px;padding:9px 11px;margin-bottom:10px
+}
+.location span{font-size:.85rem;color:var(--muted)}
+.location button{background:none;border:0;color:var(--accent);font-weight:800;cursor:pointer}
+
+.map-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px}
+#map{height:280px;width:100%}
+.custom-map-icon{background:var(--panel);border:2px solid var(--accent);border-radius:50%;text-align:center;line-height:28px;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 9px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--text);border-radius:999px;padding:8px 13px;cursor:pointer;font-weight:750;font-size:.85rem}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.cards{display:grid;gap:9px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 3px;font-size:1.05rem}
+.kind{font-size:.78rem;color:var(--muted)}
+.hours{font-weight:700;font-size:.88rem;margin-top:6px}.note{margin:7px 0;color:var(--muted);font-size:.85rem;line-height:1.4}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.actions a{border:2px solid var(--accent);border-radius:9px;padding:8px 4px;text-align:center;text-decoration:none;color:var(--accent);font-weight:850;font-size:.8rem}
+.actions a.primary{background:var(--accent);color:#fff}
+
+.grid-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.view-btn-group{display:flex;gap:4px;background:var(--chip);padding:3px;border-radius:8px}
+.view-btn{border:0;background:transparent;color:var(--text);padding:6px 12px;border-radius:6px;font-weight:800;cursor:pointer;font-size:.8rem}
+.view-btn.active{background:var(--accent);color:#fff}
+
+.day-focus-card{background:var(--panel);border:2px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:10px}
+.day-event-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.day-event-item:last-child{border-bottom:0}
+
+.week-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px}
+.day-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;min-height:110px}
+.day-box.today{border:2px solid var(--accent);background:rgba(0,95,204,0.03)}
+.day-box h4{margin:0 0 6px;font-size:.82rem;padding-bottom:4px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.grid-event{background:var(--chip);border-left:3px solid var(--accent);padding:4px 6px;border-radius:4px;margin-bottom:4px;font-size:.75rem}
+
+.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.month-head{font-weight:800;font-size:.72rem;text-align:center;padding:4px 0;color:var(--muted)}
+.month-box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px;min-height:60px;font-size:.7rem}
+.month-box.today{border:2px solid var(--accent)}
+.month-number{font-weight:800;margin-bottom:2px}
+
+details.guide-acc{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+details.guide-acc summary{padding:12px 14px;font-weight:800;cursor:pointer;background:var(--panel);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.guide-acc summary::-webkit-details-marker{display:none}
+details.guide-acc summary::after{content:'＋';font-weight:900}
+details.guide-acc[open] summary::after{content:'－'}
+.acc-content{padding:0 14px 14px;border-top:1px solid var(--line);font-size:.88rem;line-height:1.45;color:var(--muted)}
+.acc-content ul{margin:8px 0;padding-left:20px}
+.acc-content li{margin-bottom:6px}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3000;align-items:center;justify-content:center;padding:14px}
+.modal-overlay.active{display:flex}
+.modal-box{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:14px;max-width:450px;width:100%;max-height:90vh;overflow-y:auto;padding:16px;box-shadow:var(--shadow);position:relative}
+.modal-close{position:absolute;top:12px;right:12px;background:var(--chip);border:1px solid var(--line);color:var(--text);border-radius:50%;width:30px;height:30px;font-weight:900;cursor:pointer}
+.form-group{margin-top:10px}
+.form-group label{display:block;font-size:.82rem;font-weight:800;margin-bottom:4px}
+.form-group input, .form-group select{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px;background:var(--bg);color:var(--text)}
+.submit-btn{width:100%;margin-top:14px;padding:11px;background:var(--accent2);color:#fff;border:0;border-radius:99px;font-weight:850;cursor:pointer}
+
+footer{max-width:1100px;margin:16px auto;padding:0 14px;color:var(--muted);font-size:.72rem}
+.stats-bar{display:flex;gap:1rem;padding:0.5rem 1rem;background:var(--panel);border-bottom:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+.stats-bar span{color:var(--accent);font-weight:600}
+@media(min-width:760px){#map{height:340px}.cards{grid-template-columns:1fr 1fr}}
+.modal-overlay[aria-hidden="true"]{display:none!important}
+.modal-overlay.active{display:flex}
+#quickExitBtn{font-size:.75rem;padding:7px 9px}
+#quickExitBtn:hover{background:var(--chip)}
+.no-js .modal-overlay{display:none!important}
+.no-js main{display:none}
+.no-js .emergency{position:static}
+.no-js .page-view{display:block}
+.no-js .cards{display:block}
+.no-js .cards .card{break-inside:avoid;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="emergency">
+  <span>🚨 Dublin Lifeline Directory</span>
+  <a href="tel:1800707707">Need emergency shelter tonight: 1800 707 707</a>
+  <a href="tel:999">Life-threatening emergency: 999 / 112</a>
+</div>
+
+<header>
+  <div class="brand"><h1>Dublin Lifeline Directory</h1><p>Community support, meals, shelter & pathways</p></div>
+  <div style="display:flex;gap:6px;align-items:center;">
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">☾ Dark</button>
+    <a href="https://www.google.com" class="icon-btn" id="quickExitBtn" aria-label="Quick exit to neutral page">🏠 Exit</a>
+  </div>
+</header>
+
+<noscript>
+  <div class="emergency" style="position:static;">
+    <span>🚨 Dublin Lifeline Directory</span>
+    <a href="tel:1800707707">Need emergency shelter tonight: 1800 707 707</a>
+    <a href="tel:999">Life-threatening emergency: 999 / 112</a>
+  </div>
+  <main style="max-width:1100px;margin:auto;padding:14px;">
+    <h2>Core Services (no-JavaScript fallback)</h2>
+    <div style="display:grid;gap:10px;margin-top:10px;">
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;">
+        <h3>Capuchin Day Centre</h3>
+        <p>🍲 Food · 🏠 Shelter · 🩺 Medical · 💬 Support · 👕 Clothing</p>
+        <p>📍 29 Bow St, Dublin 7</p>
+        <p>📞 <a href="tel:+35318780404">+353-1-878-0404</a></p>
+        <p>⏰ Mon–Fri 08:30–15:30, Sat 09:00–13:00</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;">
+        <h3>Merchants Quay Ireland</h3>
+        <p>🍲 Food · 🏠 Shelter · 🩺 Medical · 💬 Support</p>
+        <p>📍 8 Merchants Quay, Dublin 8</p>
+        <p>📞 <a href="tel:015240160">01 524 0160</a></p>
+        <p>⏰ Mon–Fri 09:00–17:00</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;">
+        <h3>Focus Ireland</h3>
+        <p>🏠 Housing · 💬 Support · 📚 Education</p>
+        <p>📞 <a href="tel:+35318855900">+353-1-885-5900</a></p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;">
+        <h3>Samaritans Ireland</h3>
+        <p>💬 Crisis Support · Mental Health</p>
+        <p>📞 <a href="tel:116123">116 123</a> (Freephone, 24/7)</p>
+      </div>
+    </div>
+    <p style="margin-top:16px;color:var(--muted);">Enable JavaScript for full interactive map, filters, and timetable.</p>
+  </main>
+</noscript>
+
+<main>
+  <nav class="nav-tabs" role="tablist" aria-label="Main navigation">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="homePage" id="tab-homePage" onclick="showPage('homePage', this)">📍 Map & Directory</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="timetablePage" id="tab-timetablePage" onclick="showPage('timetablePage', this)">📅 Timetable</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="guidePage" id="tab-guidePage" onclick="showPage('guidePage', this)">📖 Pathways</button>
+  </nav>
+
+  <!-- PAGE 1: DIRECTORY & MAP -->
+  <section id="homePage" class="page-view active" role="tabpanel" aria-labelledby="tab-homePage">
+    <div class="location">
+      <span id="locationText">📍 Dublin City Centre</span>
+      <button onclick="requestGPS()" aria-label="Use your GPS location to find nearby services">📍 Use GPS</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin:-4px 0 8px;">📍 GPS location is used only by your browser's Geolocation API and stays on this device — it is never stored, sent to any server, or recorded. Scheduled appointments saved via the modal are stored in localStorage on this device only.</p>
+    <nav class="chips" id="filterChips">
+      <button class="chip active" onclick="filterServices('all', this)">All Services</button>
+      <button class="chip" onclick="filterServices('food', this)">🍲 Food</button>
+      <button class="chip" onclick="filterServices('shelter', this)">🏠 Shelter</button>
+      <button class="chip" onclick="filterServices('medical', this)">🩺 Medical</button>
+      <button class="chip" onclick="filterServices('counselling', this)">💬 Support</button>
+      <button class="chip" onclick="filterServices('community', this)">🤝 Community</button>
+      <button class="chip" onclick="filterServices('education', this)">📚 Education</button>
+    </nav>
+    <div class="map-wrap">
+      <div id="map" role="img" aria-label="Interactive map showing Dublin Lifeline service provider locations across Dublin City Centre, including Capuchin Day Centre, Merchants Quay Ireland, Focus Ireland, Dublin Simon Community, Samaritans, Crosscare, and Mendicity Institution. If the map fails to load, use the directory cards below for contact details.">
+      </div>
+    </div>
+    <div class="stats-bar" id="stats-bar">
+      Showing <span id="stat-count">0</span> of <span id="stat-total">0</span> providers
+    </div>
+    <div style="font-weight:900;margin:12px 0 8px;">Essential Services Directory</div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- PAGE 2: TIMETABLE -->
+  <section id="timetablePage" class="page-view" role="tabpanel" aria-labelledby="tab-timetablePage">
+    <div class="grid-controls">
+      <h2 style="margin:0;font-size:1.15rem;">Service Timetable</h2>
+      <div class="view-btn-group">
+        <button onclick="toggleGridFormat('day')" id="dayBtn" class="view-btn active">Day</button>
+        <button onclick="toggleGridFormat('week')" id="weekBtn" class="view-btn">Week</button>
+        <button onclick="toggleGridFormat('month')" id="monthBtn" class="view-btn">Month</button>
+      </div>
+    </div>
+    <button onclick="openAddModal()" style="width:100%;padding:10px;margin-bottom:12px;border:2px dashed var(--accent);background:transparent;color:var(--accent);border-radius:10px;font-weight:850;cursor:pointer">+ Add Schedule Item</button>
+    <div id="gridContainer"></div>
+  </section>
+
+  <!-- PAGE 3: GUIDE & PATHWAYS -->
+  <section id="guidePage" class="page-view" role="tabpanel" aria-labelledby="tab-guidePage">
+    <h2 style="margin-top:0;">Dublin System Navigation & Charity Pathways</h2>
+    <details class="guide-acc" open>
+      <summary>🍲 Free Meals & Grocery Food Parcels</summary>
+      <div class="acc-content" id="guideMealsContent"></div>
+    </details>
+    <details class="guide-acc">
+      <summary>👕 Clothing, Hygiene & Essential Supplies</summary>
+      <div class="acc-content" id="guideClothingContent"></div>
+    </details>
+    <details class="guide-acc">
+      <summary>🏠 Housing & Emergency Accommodation</summary>
+      <div class="acc-content" id="guideHousingContent"></div>
+    </details>
+    <details class="guide-acc">
+      <summary>💬 Mental Health & Crisis Support</summary>
+      <div class="acc-content" id="guideHealthContent"></div>
+    </details>
+    <details class="guide-acc">
+      <summary>📚 Libraries & Free Workspaces</summary>
+      <div class="acc-content" id="guideEducationContent"></div>
+    </details>
+    <details class="guide-acc">
+      <summary>📖 System Pathways & Government Welfare</summary>
+      <div class="acc-content" id="guidePathwaysContent"></div>
+    </details>
+  </section>
+</main>
+
+<!-- Appointment / Schedule Modal -->
+<div class="modal-overlay" id="addModal" role="dialog" aria-modal="true" aria-label="Schedule Service Visit">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAddModal()" aria-label="Close dialog">✕</button>
+    <h3 style="margin:0 0 10px">Schedule Service Visit</h3>
+    <div class="form-group">
+      <label for="evtDate">Date:</label>
+      <input type="date" id="evtDate">
+    </div>
+    <div class="form-group">
+      <label for="evtService">Select Service:</label>
+      <select id="evtService" onchange="autoFillTime(this.value)">
+        <option value="">-- Choose Service --</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="evtTime">Time:</label>
+      <input type="time" id="evtTime" value="12:00">
+    </div>
+    <button class="submit-btn" onclick="saveEvent()">Save Item</button>
+  </div>
+</div>
+
+<footer>Dublin Lifeline Directory · Data updated 12 September 2026 · Each provider card shows its own last-verified date · All services verified via automated pipeline · GPS location stays on this device only.</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/modules.js"></script>
+</body>
+</html>

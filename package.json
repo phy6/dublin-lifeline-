@@ -1,0 +1,16 @@
+{
+  "name": "dublin-lifeline-directory",
+  "version": "2.0.0",
+  "description": "Dublin Lifeline Directory - Service scraper and data pipeline",
+  "main": "scripts/scraper.js",
+  "scripts": {
+    "scrape": "node scripts/scraper.js",
+    "merge": "node scripts/mergeData.js",
+    "start": "node scripts/scraper.js && node scripts/mergeData.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0"
+  },
+  "author": "Dublin Lifeline Pipeline",
+  "license": "MIT"
+}

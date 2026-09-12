@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dublin Street Essentials & Support</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    :root[data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent-green: #059669;
+      --accent-blue: #2563eb;
+      --accent-amber: #d97706;
+      --accent-purple: #7c3aed;
+      --call-bg: #eef2ff;
+      --call-border: #c7d2fe;
+      --call-text: #3730a3;
+      --nav-btn-bg: #f1f5f9;
+      --nav-btn-text: #0f172a;
+      --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-green: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a78bfa;
+      --call-bg: #1e1b4b;
+      --call-border: #3730a3;
+      --call-text: #c7d2fe;
+      --nav-btn-bg: #334155;
+      --nav-btn-text: #f8fafc;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .app-container {
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .theme-toggle-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.35rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .call-strip {
+      background: var(--call-bg);
+      border: 1px solid var(--call-border);
+      color: var(--call-text);
+      border-radius: 10px;
+      padding: 0.65rem;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    /* Horizontal Scroll Filter Chips */
+    .filter-scroll {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+      scrollbar-width: none;
+    }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+
+    .chip-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 20px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow);
+    }
+
+    .chip-btn.active {
+      background: var(--text-main);
+      color: var(--bg);
+      border-color: var(--text-main);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    #map { height: 200px; width: 100%; border-radius: 8px; }
+
+    .service-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      margin-bottom: 0.65rem;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--nav-btn-bg);
+      border: 1px solid var(--card-border);
+      color: var(--nav-btn-text);
+      padding: 0.6rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .distance-txt {
+      font-size: 0.8rem;
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    .info-drawer {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.75rem;
+    }
+
+    .info-drawer summary {
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .info-content {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      padding-top: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <div class="top-bar">
+      <h1 class="app-title">Dublin Street Essentials</h1>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+    </div>
+
+    <a href="tel:1800707707" class="call-strip">
+      📞 Homeless Freephone (DRHE): 1800 707 707
+    </a>
+
+    <!-- Resource Filter Chips -->
+    <div class="filter-scroll">
+      <button class="chip-btn active" onclick="setFilter('power', this)">⚡ Power / Charge</button>
+      <button class="chip-btn" onclick="setFilter('water', this)">💧 Water</button>
+      <button class="chip-btn" onclick="setFilter('toilet', this)">🚻 Restrooms</button>
+      <button class="chip-btn" onclick="setFilter('safe', this)">🏛️ Safe Spaces</button>
+      <button class="chip-btn" onclick="setFilter('food', this)">🍲 Meals</button>
+      <button class="chip-btn" onclick="setFilter('shelter', this)">🏠 Shelter</button>
+    </div>
+
+    <div class="card">
+      <div id="map"></div>
+    </div>
+
+    <div id="resultsList"></div>
+
+    <details class="info-drawer">
+      <summary>ℹ️ Street Resource Guide & Advice</summary>
+      <div class="info-content">
+        <p><strong>Power & Wi-Fi:</strong> Central Library (ILAC) and Pearse St Library provide free seating, outlets, and Wi-Fi during operating hours without requiring a card to sit.</p>
+        <p><strong>Water:</strong> Dublin City Council public water refill points are accessible 24/7 along key civic plazas.</p>
+        <p><strong>Emergency Shelter:</strong> DRHE Freephone (1800 707 707) opens daily at 10:00 AM. Call early for placement requests.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    let userLat = null, userLon = null;
+    let activeFilter = 'power';
+
+    const resources = [
+      // Power / Charging
+      { name: "ILAC Central Library", address: "Henry St, Dublin 1", lat: 53.3506, lon: -6.2652, type: "power", hours: "10:00 AM – 8:00 PM (Mon-Thu), 10:00 AM – 5:00 PM (Fri-Sat)", info: "Free indoor seating, desk outlets, public Wi-Fi, and warm space." },
+      { name: "Pearse Street Library", address: "138-144 Pearse St, Dublin 2", lat: 53.3444, lon: -6.2482, type: "power", hours: "10:00 AM – 8:00 PM (Mon-Thu), 10:00 AM – 5:00 PM (Fri-Sat)", info: "Accessible wall sockets, quiet workspace, indoor heating." },
+
+      // Drinking Water
+      { name: "O'Connell Street Water Fountain", address: "Lower O'Connell St, Dublin 1", lat: 53.3482, lon: -6.2599, type: "water", hours: "24/7", info: "Public bottle refill tap." },
+      { name: "Wolfe Tone Square Refill Tap", address: "Jervis St, Dublin 1", lat: 53.3488, lon: -6.2675, type: "water", hours: "24/7", info: "Free municipal drinking water tap." },
+
+      // Public Toilets
+      { name: "Jervis Shopping Centre Restrooms", address: "Mary St, Dublin 1", lat: 53.3485, lon: -6.2662, type: "toilet", hours: "9:00 AM – 6:30 PM", info: "Indoor public restrooms." },
+      { name: "Stephen's Green Shopping Centre", address: "Top Floor, St Stephen's Green, Dublin 2", lat: 53.3392, lon: -6.2618, type: "toilet", hours: "9:00 AM – 7:00 PM", info: "Public accessible facilities." },
+
+      // Safe Spaces
+      { name: "National Library of Ireland Reader Area", address: "Kildare St, Dublin 2", lat: 53.3408, lon: -6.2546, type: "safe", hours: "9:30 AM – 7:45 PM", info: "Quiet, safe indoor space. Free access." },
+      
+      // Meals & Shelter
+      { name: "Capuchin Day Centre", address: "29 Bow St, Dublin 7", lat: 53.3481, lon: -6.2736, type: "food", hours: "Breakfast: 7:30–11:30 | Dinner: 12:30–15:00", info: "Hot meal served twice daily. Parcels on Wednesday." },
+      { name: "DRHE Parkgate Intake Center", address: "Parkgate Hall, Conyngham Rd, Dublin 8", lat: 53.3481, lon: -6.2892, type: "shelter", hours: "Mon–Fri: 9:00 AM – 5:00 PM", info: "Statutory assessment and emergency accommodation placement." }
+    ];
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      document.getElementById('themeBtn').innerHTML = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    const map = L.map('map', { zoomControl: false }).setView([53.346, -6.265], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+
+    let markers = [];
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function renderList() {
+      const list = document.getElementById('resultsList');
+      list.innerHTML = '';
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+
+      let items = resources.filter(r => r.type === activeFilter);
+
+      if (userLat && userLon) {
+        items.sort((a, b) => getDistance(userLat, userLon, a.lat, a.lon) - getDistance(userLat, userLon, b.lat, b.lon));
+      }
+
+      items.forEach(s => {
+        let distanceLabel = '';
+        if (userLat && userLon) {
+          const dist = getDistance(userLat, userLon, s.lat, s.lon);
+          distanceLabel = `<span class="distance-txt">• ${dist.toFixed(1)} km away</span>`;
+        }
+
+        const marker = L.marker([s.lat, s.lon]).addTo(map);
+        marker.bindPopup(`<b>${s.name}</b><br>${s.hours}`);
+        markers.push(marker);
+
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.innerHTML = `
+          <h3 style="margin: 0; font-size: 0.95rem;">${s.name}</h3>
+          <p style="margin: 0.25rem 0; font-size: 0.8rem; color: var(--text-muted);">
+            📍 ${s.address} ${distanceLabel}<br>
+            ⏰ ${s.hours}
+          </p>
+          <p style="margin: 0.35rem 0; font-size: 0.8rem; color: var(--text-main);">${s.info}</p>
+          <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=walking" target="_blank">
+            🚶 Directions (Google Maps)
+          </a>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function setFilter(type, el) {
+      activeFilter = type;
+      document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      renderList();
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          userLat = pos.coords.latitude;
+          userLon = pos.coords.longitude;
+          L.circleMarker([userLat, userLon], { radius: 6, color: '#059669', fillColor: '#059669', fillOpacity: 0.9 }).addTo(map);
+          map.setView([userLat, userLon], 14);
+          renderList();
+        },
+        () => renderList()
+      );
+    } else {
+      renderList();
+    }
+  </script>
+</body>
+</html>

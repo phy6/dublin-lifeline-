@@ -1,0 +1,116 @@
+name: Dublin Lifeline Scrape-Sync
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  TIMEZONE: 'Europe/Dublin'
+
+jobs:
+  scrape-and-merge:
+    runs-on: ubuntu-latest
+    name: Scrape Dublin Service Providers & Merge Data
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm init -y --yes 2>/dev/null || true
+          npm install --no-save node-fetch@2 cheerio@1.0 2>/dev/null || true
+          echo "dependencies=node-fetch cheerio" >> $GITHUB_STEP_SUMMARY
+
+      - name: Configure timezone
+        run: |
+          sudo timedatectl set-timezone ${{ env.TIMEZONE }}
+          echo "TZ=${{ env.TIMEZONE }}" >> $GITHUB_ENV
+
+      - name: Validate configuration
+        run: |
+          node -e "const c = require('./config/sources.json'); console.log('Loaded', c.targets.length, 'targets');"
+          node -e "const d = require('./data/services.json'); console.log('Baseline has', d.services.length, 'services');"
+
+      - name: Run scraper
+        id: scrape
+        run: |
+          echo "::group::Scraper Output"
+          node scripts/scraper.js
+          echo "::endgroup::"
+        continue-on-error: false
+
+      - name: Check scrape results
+        run: |
+          node -e "
+            const s = require('./data/scraped_output.json');
+            console.log('Successful:', s.successful + '/' + s.totalTargets);
+            if (s.failed > 0) {
+              console.log('Failed targets:', s.errors.map(e => e.name).join(', '));
+            }
+          "
+
+      - name: Run data merger
+        id: merge
+        if: always()
+        run: |
+          echo "::group::Merger Output"
+          node scripts/mergeData.js
+          echo "::endgroup::"
+
+      - name: Generate merge summary
+        id: summary
+        run: |
+          node -e "
+            const r = require('./data/merge_report.json');
+            const { additions, updates, deletions } = r.mergeStats;
+            console.log('::set-output name=additions::' + additions);
+            console.log('::set-output name=updates::' + updates);
+            console.log('::set-output name=deletions::' + deletions);
+            console.log('::set-output name=totalServices::' + r.finalServices.length);
+            console.log('::set-output name=differences::' + r.differences);
+          "
+
+      - name: Create commit summary
+        if: steps.summary.outputs.differences != '0'
+        run: |
+          git config user.name "Dublin Lifeline Bot"
+          git config user.email "bot@dublin-lifeline.local"
+          git add data/services.json data/scraped_output.json data/merge_report.json 2>/dev/null
+          git diff --cached --quiet || git commit -m "Weekly sync: ${{ steps.summary.outputs.additions }} added, ${{ steps.summary.outputs.updates }} updated, ${{ steps.summary.outputs.deletions }} deleted"
+          git push
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Scrape-sync pipeline failed. Check logs for details."
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dublin-lifeline-data
+          path: |
+            data/services.json
+            data/scraped_output.json
+            data/merge_report.json
+          retention-days: 30
+
+  notify:
+    needs: scrape-and-merge
+    runs-on: ubuntu-latest
+    if: always()
+    name: Send Notification
+    steps:
+      - name: Status notification
+        run: |
+          echo "Dublin Lifeline sync completed with status: ${{ needs.scrape-and-merge.result }}"

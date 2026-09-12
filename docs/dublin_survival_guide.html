@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Dublin survival and homeless-services finder. No registration.">
+<title>Dublin Survival Guide</title>
+
+<!-- The application is a single file. Leaflet is the only runtime library, loaded from a CDN for the map. -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+ integrity="sha256-p4NxAoJBhIINfQ3Xj8JYQ5ZlZ3rXqY4kXQ0w0q3J6Q=" crossorigin="">
+<style>
+:root{
+  --bg:#f7f8fa; --panel:#fff; --text:#101318; --muted:#505a66; --line:#c7cdd4;
+  --accent:#005fcc; --accent2:#007a45; --danger:#b00020; --warn:#9a4d00;
+  --open:#087a3b; --closed:#9c1c1c; --chip:#eef2f6; --shadow:0 2px 12px rgba(0,0,0,.10);
+}
+[data-theme="dark"]{
+  --bg:#0d1117; --panel:#151b23; --text:#f4f7fa; --muted:#b8c1cb; --line:#38424d;
+  --accent:#62a8ff; --accent2:#4ee09b; --danger:#ff6d7a; --warn:#ffc266;
+  --open:#50e19a; --closed:#ff858f; --chip:#202934; --shadow:0 2px 14px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px}
+body{padding-bottom:28px}
+button,a{font:inherit}
+a{color:var(--accent)}
+.emergency{
+  position:sticky;top:0;z-index:2000;background:var(--danger);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;
+  font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.2)
+}
+.emergency a{color:#fff;text-decoration:none;white-space:nowrap;border:2px solid #fff;border-radius:8px;padding:7px 10px}
+header{max-width:1100px;margin:auto;padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand h1{font-size:1.35rem;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.icon-btn{border:2px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 11px;cursor:pointer}
+main{max-width:1100px;margin:auto;padding:0 14px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}
+.hero button{
+  border:0;border-radius:16px;min-height:104px;padding:16px;text-align:left;cursor:pointer;
+  color:#fff;box-shadow:var(--shadow);font-weight:900
+}
+.hero .meal{background:#087a3b}.hero .shelter{background:#075bbb}
+.hero .emoji{font-size:2rem;display:block}.hero strong{display:block;font-size:1.35rem}.hero small{font-weight:600;opacity:.92}
+.location{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);
+  background:var(--panel);border-radius:12px;padding:9px 11px;margin-bottom:10px
+}
+.location span{font-size:.85rem;color:var(--muted)} .location button{background:none;border:0;color:var(--accent);font-weight:800}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 9px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--text);border-radius:999px;padding:9px 12px;cursor:pointer;font-weight:750}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.map-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px}
+#map{height:260px;width:100%}
+.map-note{padding:7px 10px;font-size:.75rem;color:var(--muted);border-top:1px solid var(--line)}
+.list-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 0 7px}
+.list-head h2{font-size:1.05rem;margin:0}.count{color:var(--muted);font-size:.82rem}
+.cards{display:grid;gap:9px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow)}
+.card-top{display:flex;justify-content:space-between;gap:10px}.card h3{margin:0 0 3px;font-size:1.05rem}
+.kind{font-size:.78rem;color:var(--muted)}.distance{font-weight:900;white-space:nowrap}
+.badge{display:inline-block;margin:7px 0 7px;padding:4px 8px;border-radius:6px;font-size:.75rem;font-weight:900}
+.badge.open{background:rgba(8,122,59,.14);color:var(--open)}.badge.closed{background:rgba(156,28,28,.13);color:var(--closed)}
+.hours{font-weight:700;font-size:.9rem}.note{margin:7px 0;color:var(--muted);font-size:.88rem;line-height:1.35}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.actions a,.actions button{border:2px solid var(--accent);border-radius:9px;padding:9px;text-align:center;text-decoration:none;background:transparent;color:var(--accent);font-weight:850;cursor:pointer}
+.actions a.primary{background:var(--accent);color:#fff}
+details{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 13px}
+summary{cursor:pointer;font-weight:900;padding:14px 0}
+.details-inner{padding:0 0 14px;color:var(--muted);font-size:.9rem;line-height:1.48}
+.details-inner h3{color:var(--text);font-size:1rem;margin:16px 0 5px}
+.source{font-size:.75rem;border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.notice{background:rgba(154,77,0,.12);border-left:4px solid var(--warn);padding:9px 10px;margin:10px 0;border-radius:4px}
+footer{max-width:1100px;margin:16px auto;padding:0 14px;color:var(--muted);font-size:.72rem}
+@media(min-width:760px){#map{height:360px}.cards{grid-template-columns:1fr 1fr}.hero button{min-height:120px}}
+.leaflet-control-attribution{font-size:8px}
+</style>
+</head>
+<body>
+<div class="emergency">
+  <span>🚨 Need emergency accommodation?</span>
+  <a href="tel:1800707707">CALL 1800 707 707</a>
+</div>
+
+<header>
+  <div class="brand"><h1>Dublin Survival Guide</h1><p>Food · shelter · warmth · hygiene · health · practical help</p></div>
+  <button class="icon-btn" id="themeBtn" aria-label="Toggle light and dark theme">☾ Dark</button>
+</header>
+
+<main>
+  <section class="hero" aria-label="Immediate needs">
+    <button class="meal" id="mealBtn"><span class="emoji">🍲</span><strong>Find a Meal</strong><small>Free or low-cost food, closest first</small></button>
+    <button class="shelter" id="shelterBtn"><span class="emoji">🏠</span><strong>Find Shelter</strong><small>Emergency accommodation and access</small></button>
+  </section>
+
+  <div class="location">
+    <span id="locationText">📍 Finding your location… Dublin fallback if unavailable.</span>
+    <button id="locateBtn">Use my location</button>
+  </div>
+
+  <nav class="chips" aria-label="Essential resources">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="meal">🍲 Meals</button>
+    <button class="chip" data-filter="shelter">🏠 Shelter</button>
+    <button class="chip" data-filter="power">⚡ Power / Charging</button>
+    <button class="chip" data-filter="water">💧 Drinking Water</button>
+    <button class="chip" data-filter="toilet">🚻 Restrooms</button>
+    <button class="chip" data-filter="safe">🏛️ Safe Indoor</button>
+    <button class="chip" data-filter="hygiene">🧼 Showers / Laundry</button>
+    <button class="chip" data-filter="health">🩺 Health</button>
+  </nav>
+
+  <section class="map-wrap" aria-label="Map">
+    <div id="map"></div>
+    <div class="map-note">Walking directions use Google Maps. Service times are checked against published information but can change — call ahead where practical.</div>
+  </section>
+
+  <div class="list-head">
+    <h2 id="listTitle">Nearby help</h2><span class="count" id="count"></span>
+  </div>
+  <section class="cards" id="cards"></section>
+
+  <details>
+    <summary>📚 How Dublin homeless services work</summary>
+    <div class="details-inner">
+      <div class="notice"><strong>Important:</strong> a day centre is not the same thing as a guaranteed bed. For emergency accommodation, contact the Dublin Homeless Freephone first.</div>
+      <h3>DRHE / Dublin City Council — emergency accommodation</h3>
+      <p>The Dublin Region Homeless Executive (DRHE), led by Dublin City Council, coordinates the regional response. The Homeless Freephone <a href="tel:1800707707">1800 707 707</a> operates <strong>10am–10pm, 7 days a week</strong> for emergency accommodation access in the Dublin Region.</p>
+      <p>If you are newly presenting as homeless in the Dublin City Council area, the Central Placement Service assesses your situation. Parkgate Hall, 6–9 Conyngham Road, Dublin 8, is <strong>appointment-led</strong>; contact the service first. Men, women and families can be assessed through the Central Placement Service.</p>
+      <p>If you have already presented to CPS and completed the housing/support assessment, the Freephone is the route to ask about temporary accommodation options. Bed availability is managed through the regional placement system, so there is no honest way for a public app to promise a bed at a particular centre.</p>
+      <p>Rough sleepers can also contact the Dublin Simon outreach service on <a href="tel:018720185">01 872 0185</a>: Monday–Friday 7am–1am; Saturday–Sunday 9am–1am.</p>
+
+      <h3>Capuchin Day Centre</h3>
+      <p>29 Bow Street, Dublin 7. Free meals, food parcels and support. Published DRHE service information lists Monday–Saturday food service, with breakfast in the morning and lunch in the afternoon; <strong>food parcels are Wednesday morning</strong>. Showers, clothing and medical services are also associated with the centre.</p>
+
+      <h3>Merchants Quay Ireland (MQI)</h3>
+      <p>Riverbank Open Access Centre, 13–14 Merchant’s Quay, Dublin 8. Adults experiencing homelessness can drop in without an appointment. MQI provides food, showers, advice, advocacy, health and harm-reduction services. Current published service information lists Monday–Friday 8am–2pm and 2pm–7pm, plus Sunday 8am–2pm; Saturday is closed for the homeless day service.</p>
+
+      <h3>Tiglin at the Lighthouse</h3>
+      <p>28 Pearse Street, Dublin 2. A day/evening service offering food, connection and practical support. Recent reporting describes breakfast around 8:30am and a busy dinner service around 7pm, with the café operating six days a week and closed Sunday. Because its public hours can change, the app deliberately flags the hours as <strong>check-before-travel</strong>.</p>
+
+      <h3>Little Flower Penny Dinners</h3>
+      <p>11 Meath Street, Dublin 8. Free nutritious lunch with dessert and tea <strong>Monday–Friday at 12 noon</strong>. No pre-booking is required and everyone in need is welcome.</p>
+
+      <h3>Crosscare</h3>
+      <p>Crosscare provides community food, welfare and housing supports. Service locations and hours change, so the safest route is to use its current contact information rather than treating an old directory entry as guaranteed. A Crosscare community café/food-bank service operates on Portland Row; support has also moved from the former Cathedral Street location.</p>
+
+      <h3>Focus Ireland</h3>
+      <p>The Focus Ireland Coffee Shop at 14A Eustace Street, Temple Bar, is open 365 days and provides food, a warm indoor environment, advice and information. Current published hours are split into daytime and evening service windows, with Wednesday starting later. It is primarily a food/support service, not a guaranteed accommodation service.</p>
+
+      <h3>Health & harm reduction — SafetyNet / MQI</h3>
+      <p>SafetyNet Primary Care provides free GP and nursing care for people facing barriers to mainstream healthcare, including people experiencing homelessness. Its open-access hub is at 60 Amiens Street, Dublin 1, with walk-in clinics Monday–Friday 1:30–4pm and appointment clinics in the morning. SafetyNet also runs a Homeless Primary Care Team that brings healthcare into homeless services and outreach locations.</p>
+      <p>MQI provides health, addiction and harm-reduction supports at Merchant’s Quay. Current SafetyNet information lists GP clinics at MQI and outreach clinics at locations including the Lighthouse Café and Mendicity.</p>
+
+      <h3>Using this app safely</h3>
+      <p>No registration is required. Location is used only in this browser session to calculate distances and sort the list. The service directory is embedded in the file so it remains usable when mobile data is poor; the live map tiles and Google Maps navigation need a network connection.</p>
+      <p><strong>If you are in immediate danger or have a serious medical emergency, call 112 or 999.</strong></p>
+
+      <div class="source">
+        <strong>Primary sources checked:</strong>
+        Homeless Dublin / DRHE; Dublin City Council; South Dublin County Council; Capuchin Day Centre; Merchants Quay Ireland; Little Flower Penny Dinners; Focus Ireland; SafetyNet Primary Care; Dublin City Libraries; Dublin public-data water-fountain dataset.
+        <br><br>Last researched: 16 August 2026. Service information can change without notice.
+      </div>
+    </div>
+  </details>
+</main>
+
+<footer>Built as a lightweight civic-tech prototype. It does not require an account and does not collect personal information.</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+"use strict";
+
+/* Embedded service directory.
+   Coordinates are fixed map points for the service address; opening status is calculated locally.
+   "verify": true is used where current public hours are less certain than official service pages.
+*/
+const DUBLIN = {lat:53.3498, lon:-6.2603};
+
+const services = [
+ {id:"drhe",name:"Dublin Homeless Freephone",kind:"Emergency accommodation",tags:["shelter"],lat:53.3489,lon:-6.2830,
+  hours:{0:"10:00–22:00",1:"10:00–22:00",2:"10:00–22:00",3:"10:00–22:00",4:"10:00–22:00",5:"10:00–22:00",6:"10:00–22:00"},
+  note:"Call first for emergency accommodation access. No guarantee of a particular bed.",phone:"1800707707",address:"Dublin Region"},
+ {id:"parkgate",name:"Central Placement Service — Parkgate Hall",kind:"Shelter access / assessment",tags:["shelter","safe"],lat:53.3471,lon:-6.2918,
+  hours:{1:"10:00–16:00",2:"10:00–16:00",3:"10:00–16:00",4:"10:00–16:00",5:"10:00–16:00"},
+  note:"Access is by appointment. Contact CPS before presenting: 01 222 6944. 6–9 Conyngham Road, Dublin 8.",phone:"012226944",address:"6–9 Conyngham Road, Dublin 8"},
+ {id:"capuchin",name:"Capuchin Day Centre",kind:"Meals · showers · clothing · support",tags:["meal","safe","hygiene","health"],lat:53.3494,lon:-6.2787,
+  hours:{1:"Breakfast 09:00–11:30 · Lunch 13:00–15:00",2:"Breakfast 09:00–11:30 · Lunch 13:00–15:00",3:"Breakfast 09:00–11:30 · Lunch 13:00–15:00",4:"Breakfast 09:00–11:30 · Lunch 13:00–15:00",5:"Breakfast 09:00–11:30 · Lunch 13:00–15:00",6:"Breakfast 09:00–11:30 · Lunch 13:00–15:00"},
+  note:"Food parcels Wednesday 09:30–12:00. Free service. 29 Bow Street, Dublin 7.",phone:"018720770",address:"29 Bow Street, Dublin 7"},
+ {id:"mqi",name:"Merchants Quay Ireland — Riverbank Open Access",kind:"Meals · showers · health · harm reduction",tags:["meal","safe","hygiene","health","power"],lat:53.3459,lon:-6.2764,
+  hours:{0:"08:00–14:00",1:"08:00–19:00",2:"08:00–19:00",3:"08:00–19:00",4:"08:00–19:00",5:"08:00–19:00",6:"Closed"},
+  note:"Adults can drop in without an appointment. Food, showers, advocacy and health support. 13–14 Merchant’s Quay.",phone:"015240924",address:"13–14 Merchant’s Quay, Dublin 8"},
+ {id:"focus",name:"Focus Ireland Coffee Shop",kind:"Food · warm indoor space · advice",tags:["meal","safe","power"],lat:53.3450,lon:-6.2650,
+  hours:{0:"10:30–14:00 · 16:00–18:30",1:"10:30–14:30 · 16:00–18:30",2:"10:30–14:30 · 16:00–18:30",3:"12:00–14:30 · 16:00–18:30",4:"10:30–14:30 · 16:00–18:30",5:"10:30–14:30 · 16:00–18:30",6:"10:30–14:00 · 16:00–18:30"},
+  note:"Open 365 days. Low-cost food, advice and information. 14A Eustace Street, Temple Bar.",phone:"016712555",address:"14A Eustace Street, Dublin 2"},
+ {id:"littleflower",name:"Little Flower Penny Dinners",kind:"Free lunch · welcoming indoor space",tags:["meal","safe"],lat:53.3375,lon:-6.2793,
+  hours:{1:"12:00 meal",2:"12:00 meal",3:"12:00 meal",4:"12:00 meal",5:"12:00 meal"},
+  note:"Free warm meal, dessert and tea Monday–Friday at noon. No pre-booking. 11 Meath Street, Dublin 8.",phone:"014536621",address:"11 Meath Street, Dublin 8"},
+ {id:"lighthouse",name:"Tiglin at the Lighthouse Café",kind:"Meals · indoor space · practical support",tags:["meal","safe","power","health"],lat:53.3444,lon:-6.2428,
+  hours:{0:"Closed",1:"Check before travel",2:"Check before travel",3:"Check before travel",4:"Check before travel",5:"Check before travel",6:"Check before travel"},
+  note:"Recent public reporting describes breakfast around 08:30 and dinner around 19:00, six days/week. Hours can change — verify before walking.",phone:"016669000",address:"28 Pearse Street, Dublin 2",verify:true},
+ {id:"crosscare",name:"Crosscare Community Café / Food Support",kind:"Food · welfare support",tags:["meal","safe"],lat:53.3550,lon:-6.2535,
+  hours:{1:"Check before travel",2:"Check before travel",3:"Check before travel",4:"Check before travel",5:"Check before travel"},
+  note:"Crosscare food and welfare services change by location. Portland Row has café/food-bank support. Call 01 836 0011 for current access information.",phone:"018360011",address:"Portland Row, Dublin 1",verify:true},
+ {id:"safetynet",name:"SafetyNet Inclusion Health Hub",kind:"Free GP · nursing · primary care",tags:["health","safe"],lat:53.3538,lon:-6.2516,
+  hours:{1:"09:30–12:00 appointments · 13:30–16:00 walk-in",2:"09:30–12:00 appointments · 13:30–16:00 walk-in",3:"09:30–12:00 appointments · 13:30–16:00 walk-in",4:"09:30–12:00 appointments · 13:30–16:00 walk-in",5:"09:30–12:00 appointments · 13:30–16:00 walk-in"},
+  note:"Free healthcare for people facing barriers to mainstream care. 60 Amiens Street, Dublin 1. Phone 01 233 6990.",phone:"012336990",address:"60 Amiens Street, Dublin 1"},
+ {id:"rathmines-toilet",name:"Rathmines Library Public Toilet",kind:"Accessible restroom",tags:["toilet","power","safe"],lat:53.3243017,lon:-6.2647069,
+  hours:{1:"10:00–20:00",2:"10:00–20:00",3:"10:00–20:00",4:"10:00–20:00",5:"10:00–17:00",6:"10:00–17:00",0:"Closed"},
+  note:"Accessible toilet inside Rathmines Library. Library also provides free Wi‑Fi during opening hours.",address:"Rathmines Road, Rathmines"},
+ {id:"trinity-toilet",name:"Trinity College — Changing Place Toilet",kind:"Accessible restroom",tags:["toilet","safe"],lat:53.3438,lon:-6.2546,
+  hours:{0:"Campus access varies",1:"Campus access varies",2:"Campus access varies",3:"Campus access varies",4:"Campus access varies",5:"Campus access varies",6:"Campus access varies"},
+  note:"Fully accessible Changing Place toilet in the Arts Building. Primarily for staff/students but also available to visitors; access can depend on building opening.",address:"Arts Building, Trinity College Dublin",verify:true},
+ {id:"stephens-toilet",name:"St Stephen’s Green public toilet",kind:"Accessible restroom",tags:["toilet"],lat:53.3381,lon:-6.2591,
+  hours:{0:"10:00–20:00",1:"10:00–20:00",2:"10:00–20:00",3:"10:00–20:00",4:"10:00–20:00",5:"10:00–20:00",6:"10:00–20:00"},
+  note:"City-centre public toilet facility; hours may change.",address:"St Stephen’s Green, Dublin 2",verify:true},
+ {id:"central-library",name:"Dublin City Central Library",kind:"Indoor seating · free Wi‑Fi · computers",tags:["power","safe","toilet"],lat:53.3496,lon:-6.2660,
+  hours:{1:"10:00–20:00",2:"10:00–20:00",3:"10:00–20:00",4:"10:00–20:00",5:"10:00–17:00",6:"10:00–17:00",0:"Closed"},
+  note:"Public library with free Wi‑Fi and indoor seating. Power sockets vary by seating area; ask staff rather than assuming a socket is available.",address:"Ilac Centre, Dublin 1",verify:true},
+ {id:"water-merrion",name:"Public drinking-water fountain — Merrion area",kind:"Drinking water",tags:["water"],lat:53.3395,lon:-6.2506,
+  hours:{0:"Public fountain — availability varies",1:"Public fountain — availability varies",2:"Public fountain — availability varies",3:"Public fountain — availability varies",4:"Public fountain — availability varies",5:"Public fountain — availability varies",6:"Public fountain — availability varies"},
+  note:"Dublin public water-fountain dataset point. Availability can be affected by maintenance or seasonal conditions; carry a backup plan.",verify:true},
+ {id:"water-phoenix",name:"Public drinking-water fountain — Phoenix Park area",kind:"Drinking water",tags:["water"],lat:53.3560,lon:-6.3295,
+  hours:{0:"Public fountain — availability varies",1:"Public fountain — availability varies",2:"Public fountain — availability varies",3:"Public fountain — availability varies",4:"Public fountain — availability varies",5:"Public fountain — availability varies",6:"Public fountain — availability varies"},
+  note:"Public drinking-water infrastructure is mapped by Dublin local authorities. Availability is not guaranteed 24/7.",verify:true}
+];
+
+let userPos = {...DUBLIN};
+let filter = "all";
+let map, userMarker, markersLayer;
+
+const dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+function hav(a,b){
+  const R=6371, p=Math.PI/180;
+  const dLat=(b.lat-a.lat)*p, dLon=(b.lon-a.lon)*p;
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*p)*Math.cos(b.lat*p)*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function today(){return new Date().getDay()}
+function isOpen(s){
+  const h=s.hours?.[today()];
+  if(!h || /closed/i.test(h)) return false;
+  if(/check before|varies|campus/i.test(h)) return null;
+  const m=h.match(/(\d{1,2}):(\d{2}).*?(\d{1,2}):(\d{2})/);
+  if(!m) return true;
+  const now=new Date(), mins=now.getHours()*60+now.getMinutes();
+  const a=+m[1]*60 + +m[2], b=+m[3]*60 + +m[4];
+  return mins>=a && mins<=b;
+}
+function mapsUrl(s){
+  return `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=walking`;
+}
+function phoneUrl(s){return s.phone?`tel:${s.phone}`:""}
+function displayHours(s){return s.hours?.[today()] || "Closed today"}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+
+function render(){
+  const list=services.map(s=>({...s,distance:hav(userPos,s)}))
+    .filter(s=>filter==="all" || s.tags.includes(filter))
+    .sort((a,b)=>a.distance-b.distance);
+  const title = filter==="meal"?"Meals near you":filter==="shelter"?"Shelter access":filter==="power"?"Power / charging":filter==="water"?"Drinking water":filter==="toilet"?"Restrooms":filter==="safe"?"Safe indoor spaces":filter==="hygiene"?"Showers / laundry":filter==="health"?"Health services":"Nearby help";
+  document.getElementById("listTitle").textContent=title;
+  document.getElementById("count").textContent=`${list.length} place${list.length===1?"":"s"} · ${dayNames[today()]}`;
+  const cards=document.getElementById("cards");
+  cards.innerHTML=list.map(s=>{
+    const state=isOpen(s), cls=state===false?"closed":"open", label=state===false?"CLOSED TODAY":state===true?"OPEN TODAY":"CHECK TODAY";
+    return `<article class="card">
+      <div class="card-top"><div><h3>${escapeHtml(s.name)}</h3><div class="kind">${escapeHtml(s.kind)}</div></div><div class="distance">${s.distance<1?(s.distance*1000).toFixed(0)+" m":s.distance.toFixed(1)+" km"}</div></div>
+      <span class="badge ${cls}">${label}</span>
+      <div class="hours">${escapeHtml(displayHours(s))}</div>
+      <div class="note">${escapeHtml(s.note)}</div>
+      <div class="note">📍 ${escapeHtml(s.address||"Dublin")}</div>
+      <div class="actions">
+        <a class="primary" href="${mapsUrl(s)}" target="_blank" rel="noopener">🚶 Walk there</a>
+        ${s.phone?`<a href="${phoneUrl(s)}">📞 Call</a>`:`<button onclick="navigator.clipboard?.writeText('${mapsUrl(s)}')">Copy route</button>`}
+      </div>
+    </article>`;
+  }).join("");
+  if(!list.length) cards.innerHTML="<div class='card'><strong>No listed resources in this category.</strong><div class='note'>Try All, or use the emergency bar above.</div></div>";
+  updateMap(list);
+}
+
+function updateMap(list){
+  if(!map) return;
+  markersLayer.clearLayers();
+  const pts=[L.latLng(userPos.lat,userPos.lon)];
+  list.forEach(s=>{
+    const marker=L.marker([s.lat,s.lon]).bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(displayHours(s))}<br><a href="${mapsUrl(s)}" target="_blank">Walking directions</a>`);
+    marker.addTo(markersLayer); pts.push(L.latLng(s.lat,s.lon));
+  });
+  if(userMarker) userMarker.setLatLng([userPos.lat,userPos.lon]);
+  else userMarker=L.circleMarker([userPos.lat,userPos.lon],{radius:9,weight:3,fillOpacity:.85}).bindPopup("You are here").addTo(map);
+  map.fitBounds(L.latLngBounds(pts),{padding:[28,28],maxZoom:15});
+}
+
+function setLocation(lat,lon,source){
+  userPos={lat,lon};
+  document.getElementById("locationText").textContent=`📍 ${source} · resources sorted by walking-start distance`;
+  render();
+}
+function locate(){
+  if(!navigator.geolocation){setLocation(DUBLIN.lat,DUBLIN.lon,"Dublin city-centre fallback");return}
+  document.getElementById("locationText").textContent="📍 Requesting GPS…";
+  navigator.geolocation.getCurrentPosition(
+    p=>setLocation(p.coords.latitude,p.coords.longitude,"Your location"),
+    ()=>setLocation(DUBLIN.lat,DUBLIN.lon,"Dublin city-centre fallback — GPS unavailable"),
+    {enableHighAccuracy:false,timeout:8000,maximumAge:300000}
+  );
+}
+
+function initMap(){
+  if(!window.L){document.getElementById("map").innerHTML="<div style='padding:20px'>Map library unavailable. The distance-sorted list still works.</div>";return}
+  map=L.map("map",{zoomControl:true,attributionControl:true}).setView([DUBLIN.lat,DUBLIN.lon],13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+  markersLayer=L.layerGroup().addTo(map);
+}
+
+document.getElementById("themeBtn").onclick=()=>{
+  const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  document.documentElement.dataset.theme=next;
+  localStorage.setItem("dublin-theme",next);
+  document.getElementById("themeBtn").textContent=next==="dark"?"☀ Light":"☾ Dark";
+};
+const savedTheme=localStorage.getItem("dublin-theme");
+if(savedTheme){document.documentElement.dataset.theme=savedTheme;document.getElementById("themeBtn").textContent=savedTheme==="dark"?"☀ Light":"☾ Dark"}
+
+document.querySelectorAll(".chip").forEach(btn=>btn.onclick=()=>{
+  filter=btn.dataset.filter;
+  document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b===btn));
+  render();
+});
+document.getElementById("mealBtn").onclick=()=>{filter="meal";document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.filter==="meal"));render();window.scrollTo({top:document.querySelector(".map-wrap").offsetTop-70,behavior:"smooth"})};
+document.getElementById("shelterBtn").onclick=()=>{filter="shelter";document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.filter==="shelter"));render();window.scrollTo({top:document.querySelector(".map-wrap").offsetTop-70,behavior:"smooth"})};
+document.getElementById("locateBtn").onclick=locate;
+
+initMap();
+render();
+locate();
+</script>
+</body>
+</html>

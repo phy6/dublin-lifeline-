@@ -1,0 +1,117 @@
+================================================================================
+                    PHASE 1 DISCOVERY SUMMARY REPORT
+================================================================================
+
+Source Archive : /home/martin/Downloads/Lifeline -20260911T175736Z-1-001.zip
+Extracted To   : /home/martin/Downloads/_temp_zip_inspect/Lifeline /
+Total Files    : 56 archive entries -> 51 extracted HTML files (0 JS, 0 CSS)
+Archive Size   : 592,412 bytes (uncompressed: ~2,200,236 bytes)
+
+NOTE: No .js or .css files exist in this archive -- all content is self-contained HTML.
+
+================================================================================
+                     IDENTIFIED PROJECTS (by <title> tag)
+================================================================================
+
+| Project Name | Version Range | File Count |
+|---|---|---|
+| Dublin Community Lifeline Directory | v3 | 2 |
+| Dublin Lifeline - Find Help Fast | v4 | 2 |
+| Dublin Street Essentials & Support | v6 | 2 |
+| Dublin Street Essentials & Emergency Support | v7-v8 | 4 |
+| Dublin Survival Guide | v9-v12 | 8 |
+| Dublin Essential Support & Pathways Guide | v13 | 2 |
+| Dublin Essential Support, Pathways & Community Guide | v14-v21Deep | 22 |
+| Dublin Survival Guide (standalone series) | surv_guide-1-3 | 7 |
+
+================================================================================
+                         MARKDOWN INVENTORY TABLE
+================================================================================
+
+| Relative File Path | Size (KB) | Last Modified | Identified Project | Key Features / Data Array Size |
+|---|---|---|---|---|
+| Lifeline /dublin_lifeline.html | 18.0 | 2026-09-11 | Dublin Community Lifeline Directory | servicesData array - 39 entries; map markers, GPS, day/category filtering |
+| Lifeline /dublin_lifeline_v3.html | 0.0 | 2026-09-11 | Dublin Community Lifeline Directory | Empty placeholder (0 bytes) |
+| Lifeline /dublin_lifeline.html | 18.0 | 2026-09-08 | Dublin Community Lifeline Directory (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v4.html | 9.6 | 2026-09-11 | Dublin Lifeline - Find Help Fast | servicesData array; basic directory listing |
+| Lifeline /dublin_lifeline_v4(1).html | 9.6 | 2026-09-08 | Dublin Lifeline - Find Help Fast (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v6.html | 11.6 | 2026-09-11 | Dublin Street Essentials & Support | Street-level emergency info; simplified data |
+| Lifeline /dublin_lifeline_v6(1).html | 11.6 | 2026-09-08 | Dublin Street Essentials & Support (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v7.html | 18.4 | 2026-09-11 | Dublin Street Essentials & Emergency Support | Emergency services; expanded categories |
+| Lifeline /dublin_lifeline_v8.html | 18.4 | 2026-09-11 | Dublin Street Essentials & Emergency Support | (same structure as v7) |
+| Lifeline /dublin_lifeline_v7(1).html | 18.4 | 2026-09-08 | Dublin Street Essentials & Emergency Support (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v8(1).html | 18.4 | 2026-09-08 | Dublin Street Essentials & Emergency Support (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v9.html | 16.0 | 2026-09-11 | Dublin Survival Guide | services array; survival basics |
+| Lifeline /dublin_lifeline_v10.html | 16.3 | 2026-09-11 | Dublin Survival Guide | Added emergency protocols |
+| Lifeline /dublin_lifeline_v11.html | 22.7 | 2026-09-11 | Dublin Survival Guide | Expanded survival content |
+| Lifeline /dublin_lifeline_v12.html | 27.5 | 2026-09-11 | Dublin Survival & Pathways Guide | Title evolution: "Survival & Pathways"; 28KB |
+| Lifeline /dublin_lifeline_v9(1).html | 16.0 | 2026-09-08 | Dublin Survival Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_survival_v9.html | 21.5 | 2026-09-11 | Dublin Survival Guide | Survival-specific edition |
+| Lifeline /dublin_lifeline_survival_v9(1).html | 21.5 | 2026-09-08 | Dublin Survival Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v13.html | 30.3 | 2026-09-11 | Dublin Essential Support & Pathways Guide | appData object introduced; pathways content |
+| Lifeline /dublin_lifeline_v13(1).html | 30.3 | 2026-09-08 | Dublin Essential Support & Pathways Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v14.html | 34.0 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | appData with events, DUBLIN object; map integration |
+| Lifeline /dublin_lifeline_v14(1).html | 34.0 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v15.html | 43.7 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | Expanded services; event listing |
+| Lifeline /dublin_lifeline_v15(1).html | 43.7 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v16.html | 71.8 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | Major expansion; map, filter, grid features |
+| Lifeline /dublin_lifeline_v16(1).html | 71.8 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v17.html | 70.1 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | allDays, appData with categories; i18n begin |
+| Lifeline /dublin_lifeline_v17(1).html | 70.1 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v18.html | 38.0 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | Streamlined version |
+| Lifeline /dublin_lifeline_v18(1).html | 38.0 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v19.html | 69.2 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | allDays, appData, dayName, dayNum, dayObj, daysPart |
+| Lifeline /dublin_lifeline_v20Claude.html | 88.3 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | appData with meal/grocery arrays; 16 services; Claude-optimized |
+| Lifeline /dublin_lifeline_v20Claude(1).html | 88.3 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v20Deep.html | 113.6 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | appData with meal_and_dropin_services (19), grocery_and_emergency_food_parcels (6); i18n, chatbotTree, dashboard, filter, grid, localStorage, report, theme, map |
+| Lifeline /dublin_lifeline_v20Deep(1).html | 113.6 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_v21Deep.html | 110.5 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | appData with i18n, chatbotTree, language, currentLang; 19 services; most feature-rich |
+| Lifeline /dublin_lifeline_v21Deep(1).html | 110.5 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_directory.html | 28.0 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | Community directory listing |
+| Lifeline /dublin_lifeline_directory(1).html | 28.0 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_lifeline_services.html | 28.0 | 2026-09-11 | Dublin Essential Support, Pathways & Community Guide | Services page |
+| Lifeline /dublin_lifeline_services(1).html | 28.0 | 2026-09-08 | Dublin Essential Support, Pathways & Community Guide (dup) | (same as above) |
+| Lifeline /dublin_survival_guide.html | 27.5 | 2026-09-11 | Dublin Survival Guide (standalone) | services, cards, dayNames, pts arrays |
+| Lifeline /dublin_survival_guide-1.html | 31.8 | 2026-09-11 | Dublin Survival Guide (standalone) | services, cards, DUBLIN, dLat |
+| Lifeline /dublin_survival_guide-2.html | 41.2 | 2026-09-11 | Dublin Survival Guide (standalone) | services, cards, ranges, rank, help |
+| Lifeline /dublin_survival_guide-3.html | 52.1 | 2026-09-11 | Dublin Survival Guide (standalone) | services, cards, pts, groups, byday; most complete survival guide |
+| Lifeline /dublin_survival_guide-1(1).html | 31.8 | 2026-09-08 | Dublin Survival Guide standalone (dup) | (same as above) |
+| Lifeline /dublin_survival_guide(1).html | 26.8 | 2026-09-08 | Dublin Survival Guide standalone (dup) | (same as above) |
+| Lifeline /dublin_survival_guide-2(1).html | 41.2 | 2026-09-08 | Dublin Survival Guide standalone (dup) | (same as above) |
+| Lifeline /dublin_survival_guide-3(1).html | 52.1 | 2026-09-08 | Dublin Survival Guide standalone (dup) | (same as above) |
+
+================================================================================
+                   MOST COMPLETE / RECENT VERSION PER PROJECT
+================================================================================
+
+| Project | Most Complete File | Rationale |
+|---|---|---|
+| Dublin Community Lifeline Directory | dublin_lifeline.html | Original source; 39-entry servicesData array; dated 2026-09-11 |
+| Dublin Lifeline - Find Help Fast | dublin_lifeline_v4.html | Only v4 version; 9.6 KB |
+| Dublin Street Essentials & Support | dublin_lifeline_v6.html | Only v6 version; 11.6 KB |
+| Dublin Street Essentials & Emergency Support | dublin_lifeline_v8.html | Latest version (v8); 18.4 KB |
+| Dublin Survival Guide (v9-v12) | dublin_lifeline_v12.html | Highest version in series; 27.5 KB, title evolved to include "Pathways" |
+| Dublin Essential Support & Pathways Guide | dublin_lifeline_v13.html | Only v13; 30.3 KB, introduces appData object |
+| Dublin Essential Support, Pathways & Community Guide | dublin_lifeline_v20Deep.html | Largest file (113.6 KB); most data entries (25 services across 2 arrays); full feature set: i18n, chatbotTree, dashboard, filter, grid, localStorage, report, theme, map |
+| Dublin Survival Guide (standalone series) | dublin_survival_guide-3.html | Largest survival guide (52.1 KB); most JS variables (groups, byday, ranges, pts); 37 data items |
+
+================================================================================
+                          KEY OBSERVATIONS
+================================================================================
+
+1. 0 JS and 0 CSS files found -- all code is inline within HTML files.
+2. The archive contains 51 HTML files with (1) duplicates (~25 pairs) likely
+   representing alternate extractions or backup copies.
+3. 2 files are 0-byte placeholders: dublin_lifeline_v3.html and
+   dublin_lifeline_v3(1).html.
+4. The "Lifeline " directory name has a trailing space in the extracted path.
+5. Data scale grew dramatically: from 39 entries in v3 to 19+6 service entries
+   with full i18n in v20Deep/v21Deep.
+6. dublin_lifeline_v20Deep.html and dublin_lifeline_v21Deep.html are the two
+   largest files (113.6 KB and 110.5 KB) and represent the most mature versions.
+7. v20Deep has the most total data entries (25 across 2 sub-arrays) while
+   v21Deep is the most feature-rich (i18n, chatbotTree, language support).
+
+================================================================================
+                    END OF PHASE 1 DISCOVERY REPORT
+================================================================================

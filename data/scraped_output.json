@@ -1,0 +1,527 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-09-12T12:52:02.442Z",
+  "totalTargets": 7,
+  "successful": 7,
+  "failed": 0,
+  "results": [
+    {
+      "id": "capuchin-day-centre",
+      "name": "Capuchin Day Centre",
+      "url": "https://capuchindaycentre.ie/",
+      "scrapedAt": "2026-09-12T12:51:47.536Z",
+      "phone": "+353-1-878-0404",
+      "phoneAll": [
+        "+353-1-878-0404"
+      ],
+      "address": "29 Bow St, Dublin 7",
+      "addressAll": [
+        "29 Bow St, Dublin 7"
+      ],
+      "hours": {
+        "mon-fri": "08:30-15:30",
+        "sat": "09:00-13:00",
+        "sun": "closed"
+      },
+      "email": "info@capuchindaycentre.ie",
+      "website": "https://capuchindaycentre.ie/",
+      "description": "The Capuchin Day Centre has been providing homeless supports in Dublin for over 55 years. Founded in 1969 by Capuchin friar, Brother Kevin Crowley.",
+      "latitude": 53.3481,
+      "longitude": -6.2758,
+      "tags": [
+        "homeless",
+        "food",
+        "medical",
+        "support",
+        "family",
+        "children",
+        "emergency"
+      ],
+      "services": [
+        "food",
+        "shelter",
+        "medical",
+        "counselling",
+        "support",
+        "clothing",
+        "health",
+        "social",
+        "information",
+        "policy"
+      ],
+      "dynamicActivities": [
+        "food",
+        "medical",
+        "support",
+        "clothing",
+        "health",
+        "social",
+        "information",
+        "policy"
+      ],
+      "category": "Community Support",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": false,
+        "address": false,
+        "hours": false,
+        "email": false,
+        "website": true,
+        "description": false
+      },
+      "activityMatchCount": 8
+    },
+    {
+      "id": "merchants-quay-ireland",
+      "name": "Merchants Quay Ireland",
+      "url": "https://mqi.ie/",
+      "scrapedAt": "2026-09-12T12:51:48.775Z",
+      "phone": "01 524 0160",
+      "phoneAll": [
+        "01 524 0160",
+        "01 524 0139"
+      ],
+      "address": "8 Merchants Quay, Dublin 8",
+      "addressAll": [
+        "8 Merchants Quay, Dublin 8"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "email": "fundraising@mqi.ie",
+      "website": "https://mqi.ie/",
+      "description": "National voluntary organization with frontline services, support, pathways towards recovery and responses to the issues of drug use & homelessness in Ireland",
+      "latitude": 53.3449,
+      "longitude": -6.2733,
+      "tags": [
+        "homeless",
+        "food",
+        "medical",
+        "addiction",
+        "recovery",
+        "community",
+        "support",
+        "family",
+        "women",
+        "men",
+        "vulnerable",
+        "harm-reduction"
+      ],
+      "services": [
+        "addiction",
+        "recovery",
+        "support",
+        "food",
+        "medical",
+        "homelessness",
+        "community",
+        "advice",
+        "health",
+        "social",
+        "volunteering",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "dynamicActivities": [
+        "food",
+        "medical",
+        "addiction",
+        "recovery",
+        "homelessness",
+        "community",
+        "support",
+        "advice",
+        "health",
+        "social",
+        "volunteering",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": true,
+        "address": false,
+        "hours": false,
+        "email": true,
+        "website": true,
+        "description": false
+      },
+      "activityMatchCount": 14
+    },
+    {
+      "id": "focus-ireland",
+      "name": "Focus Ireland",
+      "url": "https://www.focusireland.ie/",
+      "scrapedAt": "2026-09-12T12:51:54.896Z",
+      "phone": "+353-1-885-5900",
+      "phoneAll": [
+        "+353-1-885-5900"
+      ],
+      "address": "218-222 Phibsborough Road, Dublin 7",
+      "addressAll": [
+        "218-222 Phibsborough Road, Dublin 7"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:30"
+      },
+      "email": "info@focusireland.ie",
+      "website": "https://www.focusireland.ie/",
+      "description": "Services: homelessness, housing, support",
+      "latitude": 53.3592,
+      "longitude": -6.2742,
+      "tags": [
+        "housing",
+        "support",
+        "homelessness"
+      ],
+      "services": [
+        "homelessness",
+        "housing",
+        "support"
+      ],
+      "dynamicActivities": [
+        "housing",
+        "homelessness",
+        "support"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "local-archive",
+      "scrapeSuccess": true,
+      "sourceType": "local-html",
+      "selectorsMatched": {
+        "phone": true,
+        "address": true,
+        "hours": true,
+        "email": true,
+        "website": false,
+        "description": true
+      },
+      "activityMatchCount": 3
+    },
+    {
+      "id": "dublin-simon-community",
+      "name": "Dublin Simon Community",
+      "url": "https://www.dubsimon.ie/",
+      "scrapedAt": "2026-09-12T12:51:56.341Z",
+      "phone": "(01) 671 5551",
+      "phoneAll": [
+        "(01) 671 5551"
+      ],
+      "address": "85 Capel Street, Dublin 1",
+      "addressAll": [
+        "85 Capel Street, Dublin 1"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:30"
+      },
+      "email": "fundraising@dubsimon.ie",
+      "website": "https://www.dubsimon.ie",
+      "description": "",
+      "latitude": 53.3496,
+      "longitude": -6.2687,
+      "tags": [
+        "homeless",
+        "emergency",
+        "medical",
+        "counselling",
+        "addiction",
+        "recovery",
+        "crisis",
+        "housing",
+        "education",
+        "community",
+        "support",
+        "outreach",
+        "family",
+        "children",
+        "volunteer",
+        "homelessness",
+        "accommodation"
+      ],
+      "services": [
+        "homelessness",
+        "emergency",
+        "accommodation",
+        "medical",
+        "counselling",
+        "addiction",
+        "recovery",
+        "housing",
+        "community",
+        "support",
+        "education",
+        "employment",
+        "health",
+        "outreach",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "dynamicActivities": [
+        "medical",
+        "counselling",
+        "addiction",
+        "recovery",
+        "housing",
+        "homelessness",
+        "emergency",
+        "accommodation",
+        "community",
+        "support",
+        "education",
+        "employment",
+        "health",
+        "outreach",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": true,
+        "address": false,
+        "hours": false,
+        "email": true,
+        "website": true,
+        "description": false
+      },
+      "activityMatchCount": 17
+    },
+    {
+      "id": "samaritans-ireland",
+      "name": "Samaritans Ireland",
+      "url": "https://www.samaritans.org/ireland/samaritans-ireland/",
+      "scrapedAt": "2026-09-12T12:51:57.525Z",
+      "phone": "116 123",
+      "phoneAll": [
+        "116 123"
+      ],
+      "address": "191 Great Denmark Street, Dublin 1",
+      "addressAll": [
+        "191 Great Denmark Street, Dublin 1"
+      ],
+      "hours": {
+        "mon-sun": "09:00-21:00"
+      },
+      "email": "dublin@samaritans.ie",
+      "website": "https://www.samaritans.org/ireland/samaritans-ireland/",
+      "description": "Established in Ireland in 1961, there are now 25 Samaritans branches across Ireland with more than 2,000 active volunteers.",
+      "latitude": 53.3556,
+      "longitude": -6.2558,
+      "tags": [
+        "emergency",
+        "legal",
+        "support",
+        "wellbeing",
+        "men",
+        "volunteer",
+        "crisis",
+        "mental-health",
+        "helpline"
+      ],
+      "services": [
+        "mental-health",
+        "crisis-support",
+        "suicide-prevention",
+        "emergency",
+        "support",
+        "legal",
+        "health",
+        "isolation",
+        "wellbeing",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "dynamicActivities": [
+        "emergency",
+        "support",
+        "legal",
+        "health",
+        "isolation",
+        "wellbeing",
+        "fundraising",
+        "policy",
+        "research"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": true,
+        "address": false,
+        "hours": false,
+        "email": false,
+        "description": false
+      },
+      "activityMatchCount": 9
+    },
+    {
+      "id": "crosscare",
+      "name": "Crosscare",
+      "url": "https://crosscare.ie/",
+      "scrapedAt": "2026-09-12T12:51:59.254Z",
+      "phone": "+353-1-874-1919",
+      "phoneAll": [
+        "+353-1-874-1919"
+      ],
+      "address": "127 Parnell Square West, Dublin 1",
+      "addressAll": [
+        "127 Parnell Square West, Dublin 1"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "email": "info@crosscare.ie",
+      "website": "https://crosscare.ie",
+      "description": "Crosscare exists to support people and families who face difficult challenges in life and when they find it hard to get the help they need.",
+      "latitude": 53.3533,
+      "longitude": -6.2625,
+      "tags": [
+        "homeless",
+        "emergency",
+        "food",
+        "counselling",
+        "housing",
+        "community",
+        "support",
+        "youth",
+        "vulnerable",
+        "volunteer",
+        "elderly"
+      ],
+      "services": [
+        "elderly",
+        "community",
+        "support",
+        "food",
+        "counselling",
+        "housing",
+        "homelessness",
+        "emergency",
+        "accommodation",
+        "welfare",
+        "social",
+        "asylum",
+        "gambling",
+        "policy",
+        "information"
+      ],
+      "dynamicActivities": [
+        "food",
+        "counselling",
+        "housing",
+        "homelessness",
+        "emergency",
+        "accommodation",
+        "community",
+        "support",
+        "welfare",
+        "social",
+        "asylum",
+        "gambling",
+        "policy",
+        "information"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": false,
+        "address": false,
+        "hours": false,
+        "email": true,
+        "website": true,
+        "description": false
+      },
+      "activityMatchCount": 14
+    },
+    {
+      "id": "mendicity-institution",
+      "name": "Mendicity Institution",
+      "url": "https://www.mendicity.org/",
+      "scrapedAt": "2026-09-12T12:52:02.239Z",
+      "phone": "01-6773308",
+      "phoneAll": [
+        "01-6773308"
+      ],
+      "address": "115 Usher's Island, Dublin 8",
+      "addressAll": [
+        "115 Usher's Island, Dublin 8"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "email": "info@mendicity.org",
+      "website": "https://www.mendicity.org/services/",
+      "description": "",
+      "latitude": 53.3461,
+      "longitude": -6.2818,
+      "tags": [
+        "homeless",
+        "food",
+        "shelter",
+        "recovery",
+        "legal",
+        "support",
+        "family",
+        "volunteer",
+        "elderly",
+        "community",
+        "social"
+      ],
+      "services": [
+        "elderly",
+        "community",
+        "social",
+        "food",
+        "shelter",
+        "recovery",
+        "homelessness",
+        "support",
+        "legal",
+        "isolation",
+        "policy",
+        "information"
+      ],
+      "dynamicActivities": [
+        "food",
+        "shelter",
+        "recovery",
+        "homelessness",
+        "support",
+        "legal",
+        "social",
+        "isolation",
+        "policy",
+        "information"
+      ],
+      "category": "Emergency Shelter",
+      "dataSource": "scraped",
+      "scrapeSuccess": true,
+      "sourceType": "live",
+      "selectorsMatched": {
+        "phone": true,
+        "address": false,
+        "hours": false,
+        "email": true,
+        "website": true,
+        "description": false
+      },
+      "activityMatchCount": 10
+    }
+  ],
+  "errors": []
+}

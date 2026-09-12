@@ -1,0 +1,837 @@
+<script>
+    "use strict";
+
+    // ─── i18n ───────────────────────────────────────────────────────────
+
+    const i18n = {
+        en: {
+            emergencyTitle: "🚨 Emergency Night Bed Intake (DRHE)",
+            emergencyCall: "CALL 1800 707 707",
+            appTitle: "Dublin Essential Services",
+            appSub: "Meals · clothing · libraries · housing pathways",
+            tabMap: "📍 Map & Directory",
+            tabTimetable: "📅 Timetable",
+            tabGuide: "📖 System Pathways",
+            heroMealTitle: "Meals",
+            heroMealSub: "Daily drop‑in",
+            heroParcelTitle: "Parcels",
+            heroParcelSub: "Grocery hampers",
+            heroClothingTitle: "Clothing",
+            heroClothingSub: "Free attire & kits",
+            heroLibraryTitle: "Libraries",
+            heroLibrarySub: "Study & workspace",
+            heroAdviceTitle: "Advice",
+            heroAdviceSub: "Welfare & rights",
+            gpsDefault: "📍 Location: Tap to locate via GPS.",
+            gpsBtn: "📍 Use GPS",
+            chipAll: "All Services",
+            chipMeals: "🍲 Hot Meals",
+            chipParcels: "📦 Parcels",
+            chipClothing: "👕 Clothing",
+            chipLibraries: "📚 Libraries",
+            chipHealth: "🩺 Health/Medical",
+            chipShelter: "🏠 Housing/Welfare",
+            chipAdvice: "⚖️ Advice & Rights",
+            directoryHeading: "Essential Services Directory",
+            plannerTitle: "Meal & Appointment Planner",
+            viewDay: "Day",
+            viewWeek: "Week",
+            viewMonth: "Month",
+            addBtn: "+ Add Schedule Item",
+            guideHeading: "Dublin System Navigation & Charity Pathways",
+            guideAcc1: "🍲 Free Meals & Grocery Food Parcels",
+            guideAcc2: "👕 Clothes, Hygiene & Essential Supplies",
+            guideAcc3: "📚 Public Libraries & Free Workspaces",
+            guideAcc4: "🚨 Emergency Night Accommodation (DRHE)",
+            guideAcc5: "🏛️ Government Welfare & DSP (Intreo)",
+            modalTitle: "Schedule Meal or Appointment",
+            modalDate: "Date:",
+            modalService: "Select Service Window:",
+            modalCustomTitle: "Custom Title:",
+            modalTime: "Time:",
+            modalSave: "Save Item",
+            navBtn: "🚶 Direct Nav",
+            callBtn: "📞 Contact",
+            openNow: "● Open Now",
+            opensAt: "Opens at",
+            closedToday: "Closed Today",
+            addToCal: "📅 Add to Calendar"
+        },
+        uk: {
+            emergencyTitle: "🚨 Аварійне нічне розміщення (DRHE)",
+            emergencyCall: "ДЗВОНІТЬ 1800 707 707",
+            appTitle: "Основні послуги Дубліна",
+            appSub: "Харчування · одяг · бібліотеки · житло",
+            tabMap: "📍 Карта та каталог",
+            tabTimetable: "📅 Розклад",
+            tabGuide: "📖 Путівник по системах",
+            heroMealTitle: "Обіди",
+            heroMealSub: "Щоденно",
+            heroParcelTitle: "Пакунки",
+            heroParcelSub: "Продуктові набори",
+            heroClothingTitle: "Одяг",
+            heroClothingSub: "Безкоштовний одяг",
+            heroLibraryTitle: "Бібліотеки",
+            heroLibrarySub: "Навчання та робота",
+            heroAdviceTitle: "Поради",
+            heroAdviceSub: "Права та допомога",
+            gpsDefault: "📍 Локація: Натисніть для визначення GPS.",
+            gpsBtn: "📍 GPS",
+            chipAll: "Усі послуги",
+            chipMeals: "🍲 Гарячі обіди",
+            chipParcels: "📦 Пакунки",
+            chipClothing: "👕 Одяг",
+            chipLibraries: "📚 Бібліотеки",
+            chipHealth: "🩺 Медицина",
+            chipShelter: "🏠 Житло/Допомога",
+            chipAdvice: "⚖️ Поради та права",
+            directoryHeading: "Каталог основних служб",
+            plannerTitle: "Планувальник харчування та зустрічей",
+            viewDay: "День",
+            viewWeek: "Тиждень",
+            viewMonth: "Місяць",
+            addBtn: "+ Додати подію",
+            guideHeading: "Навігація по системах Дубліна та благодійність",
+            guideAcc1: "🍲 Безкоштовна їжа та продуктові набори",
+            guideAcc2: "👕 Одяг, гігієна та засоби першої потреби",
+            guideAcc3: "📚 Публічні бібліотеки та робочі місця",
+            guideAcc4: "🚨 Термінове нічне житло (DRHE)",
+            guideAcc5: "🏛️ Державна соціальна допомога (Intreo)",
+            modalTitle: "Запланувати прийом їжі або зустріч",
+            modalDate: "Дата:",
+            modalService: "Оберіть послугу:",
+            modalCustomTitle: "Власна назва:",
+            modalTime: "Час:",
+            modalSave: "Зберегти",
+            navBtn: "🚶 Навігація",
+            callBtn: "📞 Зателефонувати",
+            openNow: "● Відкрито",
+            opensAt: "Відкривається о",
+            closedToday: "Закрито",
+            addToCal: "📅 Додати в календар"
+        }
+    };
+
+    for (let lang of ['uk', 'ar', 'fr', 'pl']) {
+        if (!i18n[lang]) i18n[lang] = {};
+        for (let key in i18n.en) {
+            if (!i18n[lang][key]) i18n[lang][key] = i18n.en[key];
+        }
+    }
+
+    let currentLang = 'en';
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[lang] && i18n[lang][key]) {
+                el.textContent = i18n[lang][key];
+            }
+        });
+        const items = appData.meal_and_dropin_services;
+        const filtered = currentFilter === 'all' ? items : items.filter(s => s.tags.includes(currentFilter));
+        renderCards(filtered);
+        updateMapMarkers(filtered);
+    }
+
+    // ─── DATA ──────────────────────────────────────────────────────────
+
+    const appData = {
+        meal_and_dropin_services: [{
+            id: "capuchin",
+            charity_name: "Capuchin Day Centre",
+            location: "Bow Street, Dublin 7",
+            lat: 53.3494,
+            lon: -6.2787,
+            phone: "018720770",
+            tags: ["meal", "parcel", "health", "clothing"],
+            icon: "🍲",
+            operating_schedule: {
+                breakfast: "Mon–Sat 07:30 – 11:30",
+                lunch: "Mon–Sat 12:30 – 15:00",
+                food_parcels: "Wednesday mornings (08:00 – 11:30)",
+                clothing_and_showers: "Mon–Fri mornings"
+            },
+            recommendations: "Best for a reliable hot breakfast, lunch, and clothes distribution. Arrive early on Wednesday for food parcels."
+        }, {
+            id: "mqi",
+            charity_name: "Merchants Quay Ireland (Riverbank)",
+            location: "13–14 Merchants Quay, Dublin 8",
+            lat: 53.3459,
+            lon: -6.2764,
+            phone: "015240924",
+            tags: ["meal", "health", "clothing"],
+            icon: "🩺",
+            operating_schedule: {
+                breakfast: "Mon–Fri & Sun 08:00 – 10:00",
+                lunch: "Mon–Fri & Sun 13:00 – 15:00",
+                dinner: "Mon–Fri 17:00 – 19:00",
+                showers_and_clothing: "Daily 08:00 – 12:00 & 14:00 – 18:00"
+            },
+            recommendations: "Ideal location for free hot showers, dinner, healthcare access, and emergency clothing supplies."
+        }, {
+            id: "mendicity",
+            charity_name: "Mendicity Institution",
+            location: "9 Island Street, Dublin 8",
+            lat: 53.3452,
+            lon: -6.2818,
+            phone: "016773308",
+            tags: ["meal", "parcel"],
+            icon: "🍲",
+            operating_schedule: {
+                breakfast: "Mon–Fri 08:30 – 10:30",
+                lunch: "Mon–Fri & Sun 11:15 – 14:30",
+                dinner: "Mon–Fri & Sun 18:00 – 20:00"
+            },
+            recommendations: "Recommended for weekly ESF+ dry food parcels (bring ID and proof of status) and late‑evening dining."
+        }, {
+            id: "lighthouse",
+            charity_name: "The Light House (Tiglin)",
+            location: "105 Pearse Street, Dublin 2",
+            lat: 53.3441,
+            lon: -6.2482,
+            phone: "016715980",
+            tags: ["meal", "clothing"],
+            icon: "👕",
+            operating_schedule: {
+                breakfast: "Mon–Sat 08:30",
+                lunch: "Mon–Sat 11:00 – 15:00",
+                dinner: "Mon–Sat 19:00",
+                clothing_support: "Mon–Sat 11:00 – 15:00"
+            },
+            recommendations: "Warm indoor space near Pearse Street. Excellent stop for hot food, warm drinks, and essential clothing."
+        }, {
+            id: "littleflower",
+            charity_name: "Little Flower Penny Dinners",
+            location: "11 Meath Street, Dublin 8",
+            lat: 53.3375,
+            lon: -6.2793,
+            phone: "014536621",
+            tags: ["meal"],
+            icon: "🍲",
+            operating_schedule: {
+                lunch: "Mon–Fri 12:00 – 13:30"
+            },
+            recommendations: "Traditional hot sit‑down lunch in the Liberties between 12:00 PM and 1:30 PM."
+        }, {
+            id: "central_library",
+            charity_name: "Central Library",
+            location: "Ilac Shopping Centre, Henry St, Dublin 1",
+            lat: 53.3506,
+            lon: -6.2634,
+            phone: "018733996",
+            tags: ["library"],
+            icon: "📚",
+            operating_schedule: {
+                opening_hours: "Mon–Thu 10:00 – 20:00, Fri–Sat 10:00 – 17:00"
+            },
+            recommendations: "Central quiet workspace equipped with study desks, reliable Wi‑Fi, and accessible power outlets."
+        }, {
+            id: "pearse_library",
+            charity_name: "Pearse Street Library",
+            location: "138-144 Pearse Street, Dublin 2",
+            lat: 53.3436,
+            lon: -6.2461,
+            phone: "016744888",
+            tags: ["library"],
+            icon: "📚",
+            operating_schedule: {
+                opening_hours: "Mon–Thu 10:00 – 20:00, Fri–Sat 10:00 – 17:00"
+            },
+            recommendations: "Large south‑side library offering excellent quiet study desks and computer facilities."
+        }, {
+            id: "charleville_library",
+            charity_name: "Charleville Mall Library",
+            location: "North Strand, Dublin 1",
+            lat: 53.3548,
+            lon: -6.2468,
+            phone: "018749619",
+            tags: ["library"],
+            icon: "📚",
+            operating_schedule: {
+                opening_hours: "Mon–Thu 10:00 – 20:00, Fri–Sat 10:00 – 17:00"
+            },
+            recommendations: "Quiet neighbourhood library ideal for laptop work and public printing services."
+        }, {
+            id: "drhe",
+            charity_name: "DRHE Emergency Accommodation",
+            location: "Central Placement Service, Parkgate Hall, 6–9 Conyngham Rd, Dublin 8",
+            lat: 53.3460,
+            lon: -6.2845,
+            phone: "1800707707",
+            tags: ["shelter", "emergency"],
+            icon: "🏠",
+            operating_schedule: {
+                phone_line: "Daily 10:00 – 17:00 (call 1800 707 707)",
+                in_person: "First‑time presentations: Parkgate Hall, Mon–Fri 09:30 – 16:30"
+            },
+            recommendations: "The only official route to emergency night beds in Dublin. Call the freephone line at 10:00 AM sharp."
+        }, {
+            id: "simon",
+            charity_name: "Dublin Simon Community (Day Centre)",
+            location: "Granby Lane, Dublin 1",
+            lat: 53.3522,
+            lon: -6.2640,
+            phone: "016714551",
+            tags: ["meal", "clothing", "health", "advice"],
+            icon: "🏠",
+            operating_schedule: {
+                breakfast: "Mon–Fri 08:30 – 10:00",
+                lunch: "Mon–Fri 12:30 – 14:00",
+                showers_and_laundry: "Mon–Fri 08:00 – 17:00",
+                clothing_bank: "Mon–Fri 10:00 – 16:00"
+            },
+            recommendations: "Offers hot meals, showers, laundry, clothing, and housing advice. A good first stop for general support."
+        }, {
+            id: "focus",
+            charity_name: "Focus Ireland (Housing Advice Centre)",
+            location: "9–12 High Street, Dublin 8",
+            lat: 53.3440,
+            lon: -6.2750,
+            phone: "018817200",
+            tags: ["shelter", "advice"],
+            icon: "🏡",
+            operating_schedule: {
+                advice_phone: "Mon–Fri 09:00 – 17:00",
+                drop_in: "Mon–Fri 10:00 – 16:00 (by appointment)"
+            },
+            recommendations: "Specialist housing advice, tenancy support, and prevention. Call ahead to book an appointment."
+        }, {
+            id: "crosscare",
+            charity_name: "Crosscare Food & Social Support",
+            location: "28–29 Marlborough Street, Dublin 1",
+            lat: 53.3500,
+            lon: -6.2610,
+            phone: "018367666",
+            tags: ["parcel", "advice"],
+            icon: "📦",
+            operating_schedule: {
+                food_parcels: "Mon–Fri 10:00 – 13:00 (by referral)",
+                casework: "Mon–Fri 09:30 – 16:30"
+            },
+            recommendations: "Provides emergency food parcels and casework. Referral from another agency may be required."
+        }, {
+            id: "citizens",
+            charity_name: "Citizens Information Centre (Dublin City)",
+            location: "13–14 Upper O'Connell Street, Dublin 1",
+            lat: 53.3525,
+            lon: -6.2620,
+            phone: "018730222",
+            tags: ["advice"],
+            icon: "⚖️",
+            operating_schedule: {
+                phone_lines: "Mon–Fri 09:00 – 17:00",
+                drop_in: "Mon–Fri 10:00 – 16:00"
+            },
+            recommendations: "Free, confidential advice on social welfare, employment, housing, and consumer rights. No appointment needed for drop‑in."
+        }],
+        grocery_and_emergency_food_parcels: [{
+            provider_name: "Capuchin Day Centre",
+            location: "Bow Street, Dublin 7",
+            schedule_and_access: "Wednesdays 08:00 – 11:30",
+            recommendations: "Primary walk‑in parcel service in Dublin 7. Queue up early on Wednesday mornings."
+        }, {
+            provider_name: "Mendicity Institution",
+            location: "9 Island Street, Dublin 8",
+            schedule_and_access: "Mon–Fri 08:30 – 16:30 (1 parcel per household/week)",
+            recommendations: "Strongest option for supplementary dry groceries."
+        }, {
+            provider_name: "Crosscare Food Casework",
+            contact: "01 891 3022",
+            schedule_and_access: "By appointment / phone assessment",
+            recommendations: "Highly recommended if you need ongoing, reliable weekly food hampers."
+        }, {
+            provider_name: "St. Vincent de Paul (SVP)",
+            contact: "01 855 0022",
+            schedule_and_access: "On‑demand request system",
+            recommendations: "Recommended for emergency gaps when drop‑in parcels are insufficient."
+        }]
+    };
+
+    // ─── STATE ──────────────────────────────────────────────────────────
+
+    const DUBLIN = { lat: 53.3498, lon: -6.2603 };
+    let userLat = null, userLon = null;
+    let userEvents = JSON.parse(localStorage.getItem('dublin-guide-events')) || [
+        { id: 1, date: getIsoDate(0), time: "07:30", title: "Capuchin — Breakfast" },
+        { id: 2, date: getIsoDate(0), time: "13:00", title: "MQI Riverbank — Lunch" },
+        { id: 3, date: getIsoDate(2), time: "08:00", title: "Capuchin — Wednesday Food Parcel" }
+    ];
+    let map = null, userMarker = null, markersGroup = null;
+    let currentGridFormat = 'day';
+    let currentFilter = 'all';
+
+    // ─── HELPERS ──────────────────────────────────────────────────────
+
+    function getIsoDate(offsetDays = 0) {
+        const d = new Date();
+        d.setDate(d.getDate() + offsetDays);
+        return d.toISOString().split('T')[0];
+    }
+
+    function escapeHtml(v) {
+        return String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
+    }
+
+    function haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function formatDistance(km) {
+        if (km < 0.5) return Math.round(km * 1000) + ' m';
+        if (km < 10) return km.toFixed(1) + ' km';
+        return Math.round(km) + ' km';
+    }
+
+    function getUserDistance(lat, lon) {
+        if (userLat === null || userLon === null) return null;
+        return haversine(userLat, userLon, lat, lon);
+    }
+
+    // ─── OPEN STATUS ─────────────────────────────────────────────────
+
+    function getOpenStatus(schedule) {
+        const now = new Date();
+        const day = now.toLocaleDateString('en-IE', { weekday: 'long' });
+        const minutes = now.getHours() * 60 + now.getMinutes();
+
+        const windows = [];
+        for (const [key, val] of Object.entries(schedule)) {
+            const parts = val.split('–');
+            if (parts.length < 2) continue;
+            const daysPart = parts[0].trim();
+            const timesPart = parts[1].trim();
+            let days = [];
+            if (daysPart.includes('–')) {
+                const range = daysPart.split('–');
+                const startDay = range[0].trim();
+                const endDay = range[1].trim();
+                const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                let startIdx = allDays.indexOf(startDay);
+                let endIdx = allDays.indexOf(endDay);
+                if (startIdx === -1) { startIdx = 0; endIdx = 6; }
+                if (endIdx === -1) endIdx = 6;
+                for (let i = startIdx; i <= endIdx; i++) days.push(allDays[i]);
+            } else if (daysPart === 'Daily') {
+                days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            } else if (daysPart === 'Mon–Fri') {
+                days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            } else if (daysPart === 'Mon–Sat') {
+                days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            } else if (daysPart === 'Wed') {
+                days = ['Wednesday'];
+            } else if (daysPart === 'Fri') {
+                days = ['Friday'];
+            } else if (daysPart === 'Sat') {
+                days = ['Saturday'];
+            } else if (daysPart === 'Sun') {
+                days = ['Sunday'];
+            } else {
+                if (daysPart.includes(day)) days = [day];
+                else continue;
+            }
+
+            const timeMatch = timesPart.match(/(\d{1,2}):(\d{2})\s*–\s*(\d{1,2}):(\d{2})/);
+            if (timeMatch) {
+                const startMin = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+                const endMin = parseInt(timeMatch[3]) * 60 + parseInt(timeMatch[4]);
+                for (const d of days) {
+                    windows.push({ day: d, start: startMin, end: endMin });
+                }
+            }
+        }
+
+        for (const w of windows) {
+            if (w.day === day && minutes >= w.start && minutes < w.end) {
+                return { status: 'open', nextOpen: null };
+            }
+        }
+
+        let nextOpen = null;
+        const allDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const todayIdx = allDays.indexOf(day);
+        for (let offset = 0; offset < 8; offset++) {
+            const checkIdx = (todayIdx + offset) % 7;
+            const checkDay = allDays[checkIdx];
+            for (const w of windows) {
+                if (w.day === checkDay) {
+                    const openMin = w.start;
+                    let openDate = new Date(now);
+                    openDate.setDate(openDate.getDate() + offset);
+                    openDate.setHours(0, 0, 0, 0);
+                    openDate.setMinutes(openMin);
+                    if (offset === 0 && openMin <= minutes) continue;
+                    if (!nextOpen || openDate < nextOpen) {
+                        nextOpen = openDate;
+                    }
+                }
+            }
+            if (nextOpen) break;
+        }
+
+        if (nextOpen) return { status: 'next', nextOpen };
+        return { status: 'closed', nextOpen: null };
+    }
+
+    function formatNextOpen(date) {
+        if (!date) return '';
+        const h = date.getHours().toString().padStart(2, '0');
+        const m = date.getMinutes().toString().padStart(2, '0');
+        return h + ':' + m;
+    }
+
+    // ─── CALENDAR LINK ──────────────────────────────────────────────
+
+    function getCalendarLink(title, date, time) {
+        const start = new Date(date + 'T' + time + ':00');
+        const end = new Date(start.getTime() + 60 * 60 * 1000);
+        const startStr = start.toISOString().replace(/[-:]/g, '').split('.')[0];
+        const endStr = end.toISOString().replace(/[-:]/g, '').split('.')[0];
+        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startStr}/${endStr}&details=Dublin+Essential+Service+appointment`;
+    }
+
+    function addToCalendar(title, date, time) {
+        const url = getCalendarLink(title, date, time);
+        window.open(url, '_blank');
+    }
+
+    // ─── PAGE NAVIGATION ────────────────────────────────────────────
+
+    function showPage(pageId, btn) {
+        document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById(pageId).classList.add("active");
+        if (btn) btn.classList.add("active");
+
+        if (pageId === 'homePage' && map) {
+            setTimeout(() => { map.invalidateSize(); }, 150);
+        }
+        if (pageId === 'timetablePage') renderGridTimetable();
+    }
+
+    // ─── GPS ──────────────────────────────────────────────────────────
+
+    function requestGPS() {
+        const status = document.getElementById("locationText");
+        status.textContent = "📍 Acquiring GPS position...";
+
+        if (!("geolocation" in navigator)) {
+            status.textContent = "⚠️ Geolocation not supported on this browser.";
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                userLat = pos.coords.latitude;
+                userLon = pos.coords.longitude;
+                status.textContent = `📍 GPS Active (${userLat.toFixed(4)}, ${userLon.toFixed(4)})`;
+
+                if (!map) {
+                    initMap();
+                }
+
+                if (map) {
+                    map.setView([userLat, userLon], 14);
+                    if (userMarker) map.removeLayer(userMarker);
+
+                    userMarker = L.circleMarker([userLat, userLon], {
+                        radius: 8,
+                        fillColor: "#005fcc",
+                        color: "#ffffff",
+                        weight: 3,
+                        opacity: 1,
+                        fillOpacity: 0.9
+                    }).addTo(map).bindPopup("<strong>You are here</strong>").openPopup();
+                }
+
+                const items = appData.meal_and_dropin_services;
+                const filtered = currentFilter === 'all' ? items : items.filter(s => s.tags.includes(currentFilter));
+                renderCards(filtered);
+            },
+            err => {
+                console.warn("GPS error:", err.message);
+                status.textContent = "⚠️ GPS location denied or unavailable. Centered on Dublin.";
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    }
+
+    // ─── TIMETABLE ────────────────────────────────────────────────────
+
+    function toggleGridFormat(fmt) {
+        currentGridFormat = fmt;
+        document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById(fmt + "Btn").classList.add("active");
+        renderGridTimetable();
+    }
+
+    function renderGridTimetable() {
+        const container = document.getElementById("gridContainer");
+        const todayStr = getIsoDate(0);
+        const calText = i18n[currentLang]?.addToCal || "📅 Add to Calendar";
+
+        if (currentGridFormat === 'day') {
+            const todayEvents = userEvents.filter(e => e.date === todayStr).sort((a, b) => a.time.localeCompare(b.time));
+            let html = `<div class="day-focus-card">
+          <h3 style="margin:0 0 10px;font-size:1.1rem;color:var(--accent)">📅 Today's Schedule (${todayStr})</h3>`;
+            if (todayEvents.length) {
+                html += todayEvents.map(e => `
+            <div class="day-event-item">
+              <div><strong>${e.time}</strong> — ${escapeHtml(e.title)}</div>
+              <div class="event-actions">
+                <button class="cal-btn" onclick="addToCalendar('${escapeHtml(e.title)}', '${e.date}', '${e.time}')">${calText}</button>
+                <button onclick="deleteEvent(${e.id})" style="color:var(--danger);">✕</button>
+              </div>
+            </div>
+          `).join('');
+            } else {
+                html += `<div style="color:var(--muted);font-size:.88rem">No meal windows or appointments saved for today.</div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        } else if (currentGridFormat === 'week') {
+            let html = `<div class="week-grid">`;
+            for (let i = 0; i < 7; i++) {
+                const dateStr = getIsoDate(i);
+                const dayObj = new Date();
+                dayObj.setDate(dayObj.getDate() + i);
+                const dayName = dayObj.toLocaleDateString('en-IE', { weekday: 'short', month: 'numeric', day: 'numeric' });
+                const events = userEvents.filter(e => e.date === dateStr);
+                html += `<div class="day-box ${dateStr === todayStr ? 'today' : ''}">
+            <h4><span>${dayName}</span> ${dateStr === todayStr ? '<b>TODAY</b>' : ''}</h4>
+            ${events.map(e => `<div class="grid-event">
+              <span><strong>${e.time}</strong> ${escapeHtml(e.title)}</span>
+              <span class="cal-icon" onclick="addToCalendar('${escapeHtml(e.title)}', '${e.date}', '${e.time}')" title="${calText}">📅</span>
+            </div>`).join('')}
+          </div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        } else {
+            let html = `<div class="month-grid">
+          <div class="month-head">Mon</div><div class="month-head">Tue</div><div class="month-head">Wed</div>
+          <div class="month-head">Thu</div><div class="month-head">Fri</div><div class="month-head">Sat</div><div class="month-head">Sun</div>`;
+            for (let i = 0; i < 28; i++) {
+                const dateStr = getIsoDate(i);
+                const dayNum = dateStr.split('-')[2];
+                const events = userEvents.filter(e => e.date === dateStr);
+                html += `<div class="month-box ${dateStr === todayStr ? 'today' : ''}">
+            <div class="month-number">${dayNum}</div>
+            ${events.map(e => `<div class="grid-event" style="padding:2px;font-size:.62rem">
+              ${e.time} ${escapeHtml(e.title)}
+              <span class="cal-icon" onclick="addToCalendar('${escapeHtml(e.title)}', '${e.date}', '${e.time}')" style="font-size:.6rem;">📅</span>
+            </div>`).join('')}
+          </div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+    }
+
+    function autoFillMealTime(val) {
+        const customGroup = document.getElementById("customTitleGroup");
+        if (val === "CUSTOM") {
+            customGroup.style.display = "block";
+        } else {
+            customGroup.style.display = "none";
+            if (val.includes("|")) document.getElementById("evtTime").value = val.split("|")[1];
+        }
+    }
+
+    function openAddModal() {
+        document.getElementById("evtDate").value = getIsoDate(0);
+        document.getElementById("addModal").classList.add("active");
+    }
+
+    function closeAddModal() {
+        document.getElementById("addModal").classList.remove("active");
+    }
+
+    function saveEvent() {
+        const date = document.getElementById("evtDate").value;
+        const rawType = document.getElementById("evtType").value;
+        const time = document.getElementById("evtTime").value;
+        let title = rawType === "CUSTOM" ?
+            (document.getElementById("evtCustomTitle").value || "Appointment") :
+            rawType.split("|")[0];
+        if (!title) return;
+        userEvents.push({ id: Date.now(), date, time, title });
+        localStorage.setItem('dublin-guide-events', JSON.stringify(userEvents));
+        closeAddModal();
+        renderGridTimetable();
+    }
+
+    function deleteEvent(id) {
+        userEvents = userEvents.filter(e => e.id !== id);
+        localStorage.setItem('dublin-guide-events', JSON.stringify(userEvents));
+        renderGridTimetable();
+    }
+
+    // ─── FILTER & RENDER CARDS ──────────────────────────────────────
+
+    function filterServices(category, btn) {
+        if (btn) {
+            document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+            btn.classList.add("active");
+        }
+        currentFilter = category;
+        const items = appData.meal_and_dropin_services;
+        const filtered = category === 'all' ? items : items.filter(s => s.tags.includes(category));
+        renderCards(filtered);
+        updateMapMarkers(filtered);
+    }
+
+    function renderCards(items) {
+        const navText = i18n[currentLang]?.navBtn || "🚶 Direct Nav";
+        const callText = i18n[currentLang]?.callBtn || "📞 Contact";
+        const openNowText = i18n[currentLang]?.openNow || "● Open Now";
+        const opensAtText = i18n[currentLang]?.opensAt || "Opens at";
+        const closedText = i18n[currentLang]?.closedToday || "Closed Today";
+
+        const container = document.getElementById("cards");
+        if (!items || items.length === 0) {
+            container.innerHTML = `<div style="color:var(--muted);padding:20px;text-align:center;">No services match this filter.</div>`;
+            return;
+        }
+
+        container.innerHTML = items.map(s => {
+            const schedList = Object.entries(s.operating_schedule)
+                .map(([k, v]) => `<li><strong>${k.toUpperCase().replace(/_/g, ' ')}:</strong> ${escapeHtml(v)}</li>`)
+                .join('');
+
+            const status = getOpenStatus(s.operating_schedule);
+            let badgeHtml = '';
+            if (status.status === 'open') {
+                badgeHtml = `<span class="status-badge status-open">${openNowText}</span>`;
+            } else if (status.status === 'next' && status.nextOpen) {
+                const timeStr = formatNextOpen(status.nextOpen);
+                badgeHtml = `<span class="status-badge status-next">${opensAtText} ${timeStr}</span>`;
+            } else {
+                badgeHtml = `<span class="status-badge status-closed">${closedText}</span>`;
+            }
+
+            const dist = getUserDistance(s.lat, s.lon);
+            let distHtml = '';
+            if (dist !== null) {
+                distHtml = `<span class="distance-badge">📍 ${formatDistance(dist)}</span>`;
+            }
+
+            return `
+          <article class="card">
+            <h3>
+              ${s.icon} ${escapeHtml(s.charity_name)}
+              ${badgeHtml}
+              ${distHtml}
+            </h3>
+            <div class="kind">📍 ${escapeHtml(s.location)}</div>
+            <ul style="padding-left:18px;margin:8px 0;font-size:.85rem;color:var(--text);">${schedList}</ul>
+            <div class="note">💡 ${escapeHtml(s.recommendations)}</div>
+            <div class="actions">
+              <a class="primary" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}" target="_blank">${navText}</a>
+              <a href="tel:${s.phone}">${callText}</a>
+            </div>
+          </article>
+        `;
+        }).join('');
+    }
+
+    // ─── MAP ──────────────────────────────────────────────────────────
+
+    function updateMapMarkers(items) {
+        if (!map || !markersGroup) return;
+        markersGroup.clearLayers();
+        items.forEach(s => {
+            const customIcon = L.divIcon({
+                className: 'custom-map-icon',
+                html: s.icon,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+            const schedStr = Object.entries(s.operating_schedule)
+                .map(([k, v]) => `<b>${k}:</b> ${v}`)
+                .join('<br>');
+            const m = L.marker([s.lat, s.lon], { icon: customIcon })
+                .bindPopup(`<strong>${escapeHtml(s.charity_name)}</strong><br>${escapeHtml(s.location)}<br>${schedStr}`);
+            markersGroup.addLayer(m);
+        });
+    }
+
+    function initMap() {
+        if (!window.L) {
+            console.warn("Leaflet standard script not loaded; map cannot render.");
+            return;
+        }
+        if (map) return;
+
+        map = L.map("map").setView([DUBLIN.lat, DUBLIN.lon], 13);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { 
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        markersGroup = L.layerGroup().addTo(map);
+        updateMapMarkers(appData.meal_and_dropin_services);
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
+    }
+
+    // ─── GUIDE ────────────────────────────────────────────────────────
+
+    function renderGuideMeals() {
+        const container = document.getElementById("guideMealsContent");
+        if (!container) return;
+        let html = `<strong>Drop‑in Meal Centres:</strong><ul>`;
+        appData.meal_and_dropin_services.forEach(item => {
+            if (!item.tags.includes("library") && !item.tags.includes("shelter") && !item.tags.includes("advice")) {
+                const hours = Object.values(item.operating_schedule).join(' | ');
+                html += `<li><strong>${escapeHtml(item.charity_name)} (${escapeHtml(item.location)}):</strong> ${escapeHtml(hours)}</li>`;
+            }
+        });
+        html += `</ul><strong>Emergency Grocery Parcels & Hampers:</strong><ul>`;
+        appData.grocery_and_emergency_food_parcels.forEach(p => {
+            const contact = p.contact ? ` (${p.contact})` : '';
+            html += `<li><strong>${escapeHtml(p.provider_name)}${escapeHtml(contact)}:</strong> ${escapeHtml(p.schedule_and_access)} — <em>${escapeHtml(p.recommendations)}</em></li>`;
+        });
+        html += `</ul>`;
+        container.innerHTML = html;
+    }
+
+    // ─── THEME ────────────────────────────────────────────────────────
+
+    document.getElementById("themeBtn").onclick = () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        document.getElementById("themeBtn").textContent = next === "dark" ? "☀ Light" : "☾ Dark";
+    };
+
+    // ─── INIT ────────────────────────────────────────────────────────
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initMap();
+        renderGuideMeals();
+        renderCards(appData.meal_and_dropin_services);
+        renderGridTimetable();
+
+        window.showPage = showPage;
+        window.filterServices = filterServices;
+        window.requestGPS = requestGPS;
+        window.toggleGridFormat = toggleGridFormat;
+        window.autoFillMealTime = autoFillMealTime;
+        window.openAddModal = openAddModal;
+        window.closeAddModal = closeAddModal;
+        window.saveEvent = saveEvent;
+        window.deleteEvent = deleteEvent;
+        window.changeLanguage = changeLanguage;
+        window.addToCalendar = addToCalendar;
+    });
+</script>
