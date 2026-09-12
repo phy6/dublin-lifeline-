@@ -85,12 +85,29 @@
     </section>
   </main>
 
-  <div class="modal-overlay" id="scheduleModal" role="dialog" aria-modal="true" aria-label="Schedule Service Visit">
+<div class="modal-overlay" id="addModal" role="dialog" aria-modal="true" aria-label="Schedule Service Visit">
     <div class="modal-box">
-      <button class="modal-close" aria-label="Close dialog">✕</button>
-      <h3>Schedule Service Visit</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close dialog">✕</button>
+        <h3>Schedule Service Visit</h3>
+        <form id="scheduleForm">
+            <div class="form-group">
+                <label for="evtDate">Date</label>
+                <input type="date" id="evtDate" required>
+            </div>
+            <div class="form-group">
+                <label for="evtService">Service</label>
+                <select id="evtService" required>
+                    <option value="">Select a service...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="evtTime">Time</label>
+                <input type="time" id="evtTime" required>
+            </div>
+            <button type="submit" class="submit-btn" id="saveEventBtn">Save Event</button>
+        </form>
     </div>
-  </div>
+</div>
 
   <footer>Dublin Lifeline Directory · Data updated regularly · All services verified via automated pipeline · GPS location stays on this device only.</footer>
 
