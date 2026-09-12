@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0d1117">
+  <link rel="manifest" href="manifest.json">
   <meta name="description" content="Dublin Lifeline Directory - Free, open-source directory of Dublin's essential community support providers.">
   <title>Dublin Lifeline Directory</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
@@ -66,12 +67,16 @@
     </nav>
 
     <section id="homePage" class="page-view active" role="tabpanel" aria-labelledby="tab-homePage">
+      <div id="map" aria-label="Dublin map"></div>
+      <div id="directory-container"></div>
     </section>
 
     <section id="timetablePage" class="page-view" role="tabpanel" aria-labelledby="tab-timetablePage">
+      <div id="timetable-container"></div>
     </section>
 
     <section id="guidePage" class="page-view" role="tabpanel" aria-labelledby="tab-guidePage">
+      <div id="guide-container"></div>
     </section>
   </main>
 

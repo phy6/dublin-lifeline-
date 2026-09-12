@@ -1,0 +1,9 @@
+.page-view { display: none; }
+.page-view.active { display: block; }
+.nav-tabs .tab-btn.active { border-bottom: 2px solid var(--accent); }
+#map { width: 100%; height: 400px; }
+.leaflet-container { background: var(--bg); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 13px; margin: 8px 0; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; }
+.modal-overlay[style*="flex"], .modal-overlay.show { display: flex; }
+.modal-box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; max-width: 500px; margin: auto; }

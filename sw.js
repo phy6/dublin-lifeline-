@@ -1,13 +1,15 @@
-const CACHE_NAME = 'dublin-lifeline-v2';
+const CACHE_NAME = 'dublin-lifeline-v3';
 const ASSETS = [
   './',
   './index.html',
-  './js/modules.js',
+  './js/app.js',
+  './js/services.js',
+  './css/app.css',
   './sw.js',
   './data/services.json',
-  './data/scraped_output.json',
-  './data/merge_report.json',
-  './config/sources.json'
+  './manifest.json',
+  './https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
 ];
 
 self.addEventListener('install', (event) => {
