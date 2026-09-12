@@ -27,9 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm init -y --yes 2>/dev/null || true
-          npm install --no-save node-fetch@2 cheerio@1.0 2>/dev/null || true
-          echo "dependencies=node-fetch cheerio" >> $GITHUB_STEP_SUMMARY
+          npm ci
+          echo "dependencies=cheerio" >> $GITHUB_STEP_SUMMARY
 
       - name: Configure timezone
         run: |

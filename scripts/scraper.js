@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
-const https = require('https');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const cheerio = require('cheerio');
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import * as cheerio from 'cheerio';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(__dirname, '..', 'config', 'sources.json');
 const OUTPUT_PATH = path.join(__dirname, '..', 'data', 'scraped_output.json');
+const CANDIDATES_PATH = path.join(__dirname, '..', 'data', 'candidates.json');
 const DOCS_PATH = path.join(__dirname, '..', 'docs');
 
 const ACTIVITY_TAXONOMY = [
@@ -34,27 +37,50 @@ const ACTIVITY_SELECTORS = [
   '.services p', '.activity p', '.programs p', '.what-we-do p'
 ];
 
+const DISCOVERY_SELECTORS = [
+  '.org-list a', '.directory-item a', '.listing-item a',
+  '.org-listing a', '.charity-link', '.directory-listing a'
+];
+
 class DublinLifelineScraper {
   constructor() {
     this.config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     this.results = [];
     this.errors = [];
+    this.discovered = [];
     this.rateLimit = this.config.rateLimit || { requestsPerMinute: 10, timeout: 15000, retryAttempts: 3, retryDelay: 2000 };
     this.queue = [];
     this.processed = 0;
+    this.throttleInterval = 60000 / this.rateLimit.requestsPerMinute;
+    this.lastRequestTime = 0;
   }
 
   async init() {
     console.log('[Scraper] Initializing Dublin Lifeline Scraper');
     console.log(`[Scraper] Loaded ${this.config.targets.length} target URLs`);
     console.log(`[Scraper] Activity taxonomy: ${ACTIVITY_TAXONOMY.length} keywords`);
+    if (this.config.discovery && this.config.discovery.urls) {
+      console.log(`[Scraper] Discovery sources: ${this.config.discovery.urls.length} directories`);
+    }
     this.queue = [...this.config.targets];
+  }
+
+  async throttle() {
+    const now = Date.now();
+    const elapsed = now - this.lastRequestTime;
+    const waitTime = this.throttleInterval - elapsed;
+    if (waitTime > 0) {
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    this.lastRequestTime = Date.now();
   }
 
   findLocalArchive(id) {
     const candidates = [
       `${id}.html`, `${id}.htm`,
-      `dublin_lifeline_${id}.html`, `${id}_source.html`
+      `dublin_lifeline_${id}.html`, `${id}_source.html`,
+      `${id}.source.html`, `source_${id}.html`,
+      `${id}-source.html`, `${id}_archive.html`
     ];
     for (const file of candidates) {
       const filePath = path.join(DOCS_PATH, file);
@@ -68,6 +94,15 @@ class DublinLifelineScraper {
 
   async fetch(url, redirectCount = 0) {
     if (redirectCount > 10) throw new Error(`Too many redirects for ${url}`);
+    await this.throttle();
+    const timeoutMs = this.rateLimit.timeout;
+    return Promise.race([
+      this._doFetch(url, redirectCount),
+      new Promise((_, reject) => setTimeout(() => reject(new Error(`Timeout fetching ${url}`)), timeoutMs))
+    ]);
+  }
+
+  _doFetch(url, redirectCount) {
     return new Promise((resolve, reject) => {
       const client = url.startsWith('https') ? https : http;
       const controller = new AbortController();
@@ -76,9 +111,10 @@ class DublinLifelineScraper {
         reject(new Error(`Timeout fetching ${url}`));
       }, this.rateLimit.timeout);
 
-      client.get(url, {
+      const req = client.get(url, {
         signal: controller.signal,
-        headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) Chrome/128.0.0.0' }
+        headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) Chrome/128.0.0.0 DublinLifeline/3.0' },
+        timeout: this.rateLimit.timeout
       }, (res) => {
         clearTimeout(timeout);
         const loc = res.headers.location;
@@ -96,7 +132,19 @@ class DublinLifelineScraper {
           res.on('data', chunk => data += chunk);
           res.on('end', () => reject(new Error(`HTTP ${res.statusCode} for ${url}`)));
         }
-      }).on('error', reject);
+      });
+      req.on('timeout', () => {
+        controller.abort();
+        reject(new Error(`Timeout fetching ${url}`));
+      });
+      req.on('error', reject);
+      req.on('socket', (socket) => {
+        socket.setTimeout(this.rateLimit.timeout);
+        socket.on('timeout', () => {
+          controller.abort();
+          reject(new Error(`Socket timeout fetching ${url}`));
+        });
+      });
     });
   }
 
@@ -120,6 +168,27 @@ class DublinLifelineScraper {
     try { return new URL(url, baseUrl).href; } catch (e) { return url; }
   }
 
+  normalizePhone(phone) {
+    if (!phone) return '';
+    return phone.replace(/[\s\-\(\)\.]/g, '').trim();
+  }
+
+  normalizeAddress(addr) {
+    if (!addr) return '';
+    return addr.trim().replace(/\s+/g, ' ');
+  }
+
+  normalizeHours(hours) {
+    if (!hours) return {};
+    if (typeof hours === 'string') {
+      return { 'mon-fri': hours };
+    }
+    if (typeof hours === 'object') {
+      return { ...hours };
+    }
+    return {};
+  }
+
   extractSelectors(html, selectors, baseUrl) {
     const result = {};
     try {
@@ -133,14 +202,14 @@ class DublinLifelineScraper {
               const href = $(el).attr('href') || '';
               const attrValue = $(el).attr('content') || $(el).attr('datetime') || '';
               const htmlContent = $(el).html();
-if (key === 'website') {
+              if (key === 'website') {
                 if (href) {
-                    const resolved = this.resolveUrl(baseUrl, href);
-                    if (resolved) result[key].push(resolved);
+                  const resolved = this.resolveUrl(baseUrl, href);
+                  if (resolved) result[key].push(resolved);
                 } else if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
-                    result[key].push(text);
+                  result[key].push(text);
                 }
-            } else {
+              } else {
                 const val = text || href || attrValue || (htmlContent ? htmlContent.trim() : '');
                 if (val) result[key].push(val);
               }
@@ -162,7 +231,6 @@ if (key === 'website') {
     const found = new Set();
     const fullText = $('body').text().toLowerCase();
 
-    // 1. Match taxonomy keywords found in the page text
     for (const keyword of ACTIVITY_TAXONOMY) {
       const regex = new RegExp('\\b' + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
       if (regex.test(fullText)) {
@@ -170,7 +238,6 @@ if (key === 'website') {
       }
     }
 
-    // 2. Extract from structured service/activity list elements
     for (const selector of ACTIVITY_SELECTORS) {
       $(selector).each((i, el) => {
         const text = $(el).text().trim().toLowerCase();
@@ -184,7 +251,6 @@ if (key === 'website') {
       });
     }
 
-    // 3. Extract from link text and button labels
     $('a, button').each((i, el) => {
       const text = $(el).text().trim().toLowerCase();
       if (!text) return;
@@ -196,7 +262,6 @@ if (key === 'website') {
       }
     });
 
-    // 4. Extract from headings (h2, h3, h4) that describe services
     $('h2, h3, h4').each((i, el) => {
       const text = $(el).text().trim().toLowerCase();
       if (!text) return;
@@ -208,7 +273,6 @@ if (key === 'website') {
       }
     });
 
-    // 5. Extract from meta description and title
     const metaDesc = $('meta[name="description"]').attr('content') || '';
     const title = $('title').text().toLowerCase();
     const metaKeywords = $('meta[name="keywords"]').attr('content') || '';
@@ -220,7 +284,6 @@ if (key === 'website') {
       }
     }
 
-    // 6. Extract from itemprop/serviceType structured data
     $('[itemprop="serviceType"], [itemprop="offers"], .service-type, .program-type').each((i, el) => {
       const text = $(el).text().trim().toLowerCase();
       if (!text) return;
@@ -232,11 +295,9 @@ if (key === 'website') {
       }
     });
 
-    // Combine dynamically found with fallback services (union, deduplicated)
     const dynamicActivities = Array.from(found);
     const allServices = [...new Set([...fallbackServices, ...dynamicActivities])];
 
-    // Prioritize: keep fallback order first, then append new discoveries
     const ordered = [];
     const seen = new Set();
     for (const svc of allServices) {
@@ -279,7 +340,6 @@ if (key === 'website') {
       }
     }
 
-    // Also check structured data
     $('[itemprop="keywords"], .tags a, .tag').each((i, el) => {
       const text = $(el).text().trim().toLowerCase();
       if (text && tagPatterns.includes(text)) {
@@ -288,154 +348,6 @@ if (key === 'website') {
     });
 
     return Array.from(found);
-  }
-
-  async scrapeTarget(target) {
-    const { id, name, url, selectors, fallback } = target;
-    console.log(`[Scraper] Processing: ${name} (${id})`);
-
-    let html = null;
-    let dataSource = 'scraped';
-
-    try {
-      html = await this.retry(() => this.fetch(url), this.rateLimit.retryAttempts, this.rateLimit.retryDelay);
-      console.log(`[Scraper] Live fetch succeeded for ${name}`);
-    } catch (err) {
-      console.warn(`[Scraper] Live fetch failed for ${name}: ${err.message}`);
-      html = this.findLocalArchive(id);
-      if (html) {
-        dataSource = 'local-archive';
-        console.log(`[Scraper] Using local archive fallback for ${name}`);
-      } else {
-        console.error(`[Scraper] No local archive found for ${name}`);
-        this.errors.push({ id, name, url, error: err.message });
-        this.results.push({
-          id, name, url,
-          scrapedAt: new Date().toISOString(),
-          phone: fallback.phone || '',
-          phoneAll: [fallback.phone || ''],
-          address: fallback.address || '',
-          addressAll: [fallback.address || ''],
-          hours: fallback.hours || {},
-          email: fallback.email || '',
-          website: url,
-          description: '',
-          latitude: fallback.latitude || null,
-          longitude: fallback.longitude || null,
-          tags: fallback.tags || [],
-          services: fallback.services || [],
-          dynamicActivities: [],
-          activityMatchCount: 0,
-          category: fallback.category || 'General',
-          dataSource: 'fallback',
-          scrapeSuccess: false,
-          error: err.message
-        });
-        return;
-      }
-    }
-
-    try {
-      const extracted = this.extractSelectors(html, selectors, url) || {};
-
-      const phone = (extracted.phone && extracted.phone.length > 0) ? extracted.phone : (fallback.phone ? [fallback.phone] : []);
-      const address = (extracted.address && extracted.address.length > 0) ? extracted.address : (fallback.address ? [fallback.address] : []);
-      let hours;
-      try {
-        hours = (extracted.hours && extracted.hours.length > 0) ? this.normalizeHours(extracted.hours) : (fallback.hours || {});
-      } catch (e) {
-        hours = fallback.hours || {};
-      }
-
-      // DYNAMIC ACTIVITY EXTRACTION
-      let activities = { services: fallback.services || [], dynamicActivities: [], matchedSelectors: false };
-      let tags = [];
-      try {
-        activities = this.extractActivities(html, url, fallback.services || []);
-        tags = this.extractTags(html);
-      } catch (e) {
-        console.warn(`[Scraper] Activity extraction fallback for ${name}: ${e.message}`);
-        activities = { services: fallback.services || [], dynamicActivities: [], matchedSelectors: false };
-        tags = (fallback.tags || []);
-      }
-
-      // Extract description from meta and body
-      let description = '';
-      try {
-        const $ = cheerio.load(html);
-        const metaDesc = $('meta[name="description"]').attr('content') || '';
-        const aboutText = $('.about-text, .about, .mission, .mission-statement, .about-us p').text().trim();
-        description = (extracted.description && extracted.description.length > 0)
-          ? extracted.description[0]
-          : (metaDesc || aboutText || '');
-      } catch (e) {
-        description = (extracted.description && extracted.description.length > 0) ? extracted.description[0] : '';
-      }
-
-      // Determine category dynamically from page content or use fallback
-      let pageCategory = null;
-      try { pageCategory = this.detectCategory(html, activities.services); } catch (e) {}
-      const category = pageCategory || fallback.category || 'General';
-
-      // Check for additional data points
-      const website = (extracted.website && extracted.website.length > 0) ? extracted.website[0] : url;
-      const email = (extracted.email && extracted.email.length > 0) ? extracted.email[0] : (fallback.email || '');
-      const allTags = [...new Set([...tags, ...(fallback.tags || [])])];
-
-      this.results.push({
-        id,
-        name,
-        url,
-        scrapedAt: new Date().toISOString(),
-        phone: (phone.length > 0 ? phone[0] : (fallback.phone || '')),
-        phoneAll: phone,
-        address: (address.length > 0 ? address[0] : (fallback.address || '')),
-        addressAll: address,
-        hours,
-        email,
-        website,
-        description,
-        latitude: fallback.latitude || null,
-        longitude: fallback.longitude || null,
-        tags: allTags,
-        services: activities.services,
-        dynamicActivities: activities.dynamicActivities,
-        category,
-        dataSource: dataSource,
-        scrapeSuccess: true,
-        sourceType: dataSource === 'local-archive' ? 'local-html' : 'live',
-        selectorsMatched: Object.fromEntries(
-          Object.entries(selectors).map(([k, v]) => [k, (extracted[k] && extracted[k].length > 0)])
-        ),
-        activityMatchCount: activities.dynamicActivities.length
-      });
-      console.log(`[Scraper] Completed: ${name} [${dataSource}] — ${activities.services.length} services, ${allTags.length} tags, category: ${category}`);
-    } catch (err) {
-      console.error(`[Scraper] Parse error for ${name}: ${err.message}`);
-      this.errors.push({ id, name, url, error: err.message });
-      this.results.push({
-        id, name, url,
-        scrapedAt: new Date().toISOString(),
-        phone: fallback.phone || '',
-        phoneAll: [fallback.phone || ''],
-        address: fallback.address || '',
-        addressAll: [fallback.address || ''],
-        hours: fallback.hours || {},
-        email: fallback.email || '',
-        website: url,
-        description: '',
-        latitude: fallback.latitude || null,
-        longitude: fallback.longitude || null,
-        tags: fallback.tags || [],
-        services: fallback.services || [],
-        dynamicActivities: [],
-        activityMatchCount: 0,
-        category: fallback.category || 'General',
-        dataSource: dataSource,
-        scrapeSuccess: false,
-        error: err.message
-      });
-    }
   }
 
   detectCategory(html, services) {
@@ -463,7 +375,6 @@ if (key === 'website') {
       }
     }
 
-    // Check if services array contains category-indicative keywords
     const svcText = services.join(' ').toLowerCase();
     for (const [category, keywords] of Object.entries(categoryMap)) {
       for (const kw of keywords) {
@@ -474,6 +385,181 @@ if (key === 'website') {
     }
 
     return null;
+  }
+
+  async discoverProviders() {
+    if (!this.config.discovery || !this.config.discovery.urls) {
+      console.log('[Scraper] No discovery URLs configured');
+      return [];
+    }
+
+    const discoveryUrls = this.config.discovery.urls;
+    const discoverySelectors = this.config.discovery.selectors;
+    const discovered = [];
+
+    console.log('[Scraper] Starting provider discovery...');
+
+    for (const dirUrl of discoveryUrls) {
+      try {
+        const html = await this.retry(() => this.fetch(dirUrl), 2, 1000);
+        const $ = cheerio.load(html);
+        const elements = $(discoverySelectors.name.join(', ')).first().closest('a, li, div, article');
+        const seen = new Set();
+
+        $(discoverySelectors.name.join(', ')).each((i, el) => {
+          const name = $(el).text().trim();
+          if (!name || seen.has(name)) return;
+          const link = $(el).closest('a').attr('href') || $(el).find('a').attr('href') || '';
+          const url = this.resolveUrl(dirUrl, link);
+          if (!url || seen.has(url)) return;
+
+          seen.add(name);
+          discovered.push({
+            name,
+            url: url || dirUrl,
+            source: dirUrl,
+            discoveredAt: new Date().toISOString()
+          });
+        });
+
+        console.log(`[Scraper] Discovery from ${dirUrl}: ${discovered.length} candidates so far`);
+        await this.sleep(this.config.discovery.interval || 60000);
+      } catch (err) {
+        console.warn(`[Scraper] Discovery failed for ${dirUrl}: ${err.message}`);
+      }
+    }
+
+    const maxResults = this.config.discovery.maxResults || 50;
+    this.discovered = discovered.slice(0, maxResults);
+
+    console.log(`[Scraper] Discovery complete: ${this.discovered.length} providers found`);
+    return this.discovered;
+  }
+
+  async scrapeTarget(target) {
+    const { id, name, url, selectors, fallback } = target;
+    console.log(`[Scraper] Processing: ${name} (${id})`);
+
+    let html = null;
+    let dataSource = 'scraped';
+
+    try {
+      html = await this.retry(() => this.fetch(url), this.rateLimit.retryAttempts, this.rateLimit.retryDelay);
+      console.log(`[Scraper] Live fetch succeeded for ${name}`);
+    } catch (err) {
+      console.warn(`[Scraper] Live fetch failed for ${name}: ${err.message}`);
+      html = this.findLocalArchive(id);
+      if (html) {
+        dataSource = 'local-archive';
+        console.log(`[Scraper] Using local archive fallback for ${name}`);
+      } else {
+        console.error(`[Scraper] No local archive found for ${name}`);
+        dataSource = 'fallback';
+        this.errors.push({ id, name, url, error: err.message });
+        this.results.push(this._buildFallbackResult(id, name, url, fallback, dataSource, err.message));
+        return;
+      }
+    }
+
+    try {
+      const extracted = this.extractSelectors(html, selectors, url) || {};
+
+      const phoneArr = (extracted.phone && extracted.phone.length > 0) ? extracted.phone : (fallback.phone ? [fallback.phone] : []);
+      const addrArr = (extracted.address && extracted.address.length > 0) ? extracted.address : (fallback.address ? [fallback.address] : []);
+      let hours;
+      try {
+        hours = (extracted.hours && extracted.hours.length > 0) ? this.normalizeHours(extracted.hours) : (fallback.hours || {});
+      } catch (e) { hours = fallback.hours || {}; }
+
+      let activities = { services: fallback.services || [], dynamicActivities: [], matchedSelectors: false };
+      let tags = [];
+      try {
+        activities = this.extractActivities(html, url, fallback.services || []);
+        tags = this.extractTags(html);
+      } catch (e) {
+        console.warn(`[Scraper] Activity extraction fallback for ${name}: ${e.message}`);
+        activities = { services: fallback.services || [], dynamicActivities: [], matchedSelectors: false };
+        tags = (fallback.tags || []);
+      }
+
+      let description = '';
+      try {
+        const $ = cheerio.load(html);
+        const metaDesc = $('meta[name="description"]').attr('content') || '';
+        const aboutText = $('.about-text, .about, .mission, .mission-statement, .about-us p').text().trim();
+        description = (extracted.description && extracted.description.length > 0)
+          ? extracted.description[0]
+          : (metaDesc || aboutText || '');
+      } catch (e) {
+        description = (extracted.description && extracted.description.length > 0) ? extracted.description[0] : '';
+      }
+
+      let pageCategory = null;
+      try { pageCategory = this.detectCategory(html, activities.services); } catch (e) {}
+      const category = pageCategory || fallback.category || 'General';
+
+      const website = (extracted.website && extracted.website.length > 0) ? extracted.website[0] : url;
+      const email = (extracted.email && extracted.email.length > 0) ? extracted.email[0] : (fallback.email || '');
+      const allTags = [...new Set([...tags, ...(fallback.tags || [])])];
+
+      this.results.push({
+        id,
+        name,
+        url,
+        scrapedAt: new Date().toISOString(),
+        phone: (phoneArr.length > 0 ? phoneArr[0] : (fallback.phone || '')),
+        phoneAll: phoneArr,
+        address: (addrArr.length > 0 ? addrArr[0] : (fallback.address || '')),
+        addressAll: addrArr,
+        hours,
+        email,
+        website,
+        description,
+        latitude: fallback.latitude || null,
+        longitude: fallback.longitude || null,
+        tags: allTags,
+        services: activities.services,
+        dynamicActivities: activities.dynamicActivities,
+        category,
+        dataSource: dataSource,
+        scrapeSuccess: true,
+        sourceType: dataSource === 'local-archive' ? 'local-html' : 'live',
+        selectorsMatched: Object.fromEntries(
+          Object.entries(selectors).map(([k, v]) => [k, (extracted[k] && extracted[k].length > 0)])
+        ),
+        activityMatchCount: activities.dynamicActivities.length
+      });
+      console.log(`[Scraper] Completed: ${name} [${dataSource}] — ${activities.services.length} services, ${allTags.length} tags, category: ${category}`);
+    } catch (err) {
+      console.error(`[Scraper] Parse error for ${name}: ${err.message}`);
+      this.errors.push({ id, name, url, error: err.message });
+      this.results.push(this._buildFallbackResult(id, name, url, fallback, dataSource, err.message));
+    }
+  }
+
+  _buildFallbackResult(id, name, url, fallback, dataSource, error) {
+    return {
+      id, name, url,
+      scrapedAt: new Date().toISOString(),
+      phone: fallback.phone || '',
+      phoneAll: [fallback.phone || ''],
+      address: fallback.address || '',
+      addressAll: [fallback.address || ''],
+      hours: fallback.hours || {},
+      email: fallback.email || '',
+      website: url,
+      description: '',
+      latitude: fallback.latitude || null,
+      longitude: fallback.longitude || null,
+      tags: fallback.tags || [],
+      services: fallback.services || [],
+      dynamicActivities: [],
+      activityMatchCount: 0,
+      category: fallback.category || 'General',
+      dataSource: dataSource,
+      scrapeSuccess: false,
+      error: error
+    };
   }
 
   async sleep(ms) {
@@ -496,7 +582,8 @@ if (key === 'website') {
       successful: this.results.filter(r => r.scrapeSuccess).length,
       failed: this.errors.length,
       results: this.results,
-      errors: this.errors
+      errors: this.errors,
+      discovered: this.discovered
     };
 
     fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf-8');
@@ -505,6 +592,8 @@ if (key === 'website') {
     return output;
   }
 }
+
+export { DublinLifelineScraper, ACTIVITY_TAXONOMY, ACTIVITY_SELECTORS };
 
 async function main() {
   const scraper = new DublinLifelineScraper();
@@ -516,5 +605,3 @@ main().catch(err => {
   console.error('[Scraper] Fatal error:', err);
   process.exit(1);
 });
-
-module.exports = { DublinLifelineScraper, ACTIVITY_TAXONOMY, ACTIVITY_SELECTORS };

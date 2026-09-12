@@ -1,15 +1,15 @@
 {
-  "version": "2.0.0",
-  "generatedAt": "2026-09-12T12:52:02.442Z",
-  "totalTargets": 7,
+  "version": "3.0.0",
+  "generatedAt": "2026-09-12T22:01:19.913Z",
+  "totalTargets": 10,
   "successful": 7,
-  "failed": 0,
+  "failed": 3,
   "results": [
     {
       "id": "capuchin-day-centre",
       "name": "Capuchin Day Centre",
       "url": "https://capuchindaycentre.ie/",
-      "scrapedAt": "2026-09-12T12:51:47.536Z",
+      "scrapedAt": "2026-09-12T21:59:38.765Z",
       "phone": "+353-1-878-0404",
       "phoneAll": [
         "+353-1-878-0404"
@@ -77,7 +77,7 @@
       "id": "merchants-quay-ireland",
       "name": "Merchants Quay Ireland",
       "url": "https://mqi.ie/",
-      "scrapedAt": "2026-09-12T12:51:48.775Z",
+      "scrapedAt": "2026-09-12T21:59:44.581Z",
       "phone": "01 524 0160",
       "phoneAll": [
         "01 524 0160",
@@ -159,7 +159,7 @@
       "id": "focus-ireland",
       "name": "Focus Ireland",
       "url": "https://www.focusireland.ie/",
-      "scrapedAt": "2026-09-12T12:51:54.896Z",
+      "scrapedAt": "2026-09-12T22:00:02.044Z",
       "phone": "+353-1-885-5900",
       "phoneAll": [
         "+353-1-885-5900"
@@ -169,7 +169,7 @@
         "218-222 Phibsborough Road, Dublin 7"
       ],
       "hours": {
-        "mon-fri": "09:00-17:30"
+        "0": "{\"mon-fri\":\"09:00-17:30\"}"
       },
       "email": "info@focusireland.ie",
       "website": "https://www.focusireland.ie/",
@@ -209,7 +209,7 @@
       "id": "dublin-simon-community",
       "name": "Dublin Simon Community",
       "url": "https://www.dubsimon.ie/",
-      "scrapedAt": "2026-09-12T12:51:56.341Z",
+      "scrapedAt": "2026-09-12T22:00:08.512Z",
       "phone": "(01) 671 5551",
       "phoneAll": [
         "(01) 671 5551"
@@ -301,7 +301,7 @@
       "id": "samaritans-ireland",
       "name": "Samaritans Ireland",
       "url": "https://www.samaritans.org/ireland/samaritans-ireland/",
-      "scrapedAt": "2026-09-12T12:51:57.525Z",
+      "scrapedAt": "2026-09-12T22:00:14.224Z",
       "phone": "116 123",
       "phoneAll": [
         "116 123"
@@ -314,7 +314,7 @@
         "mon-sun": "09:00-21:00"
       },
       "email": "dublin@samaritans.ie",
-      "website": "https://www.samaritans.org/ireland/samaritans-ireland/",
+      "website": "https://www.samaritans.org/?form=donate-now",
       "description": "Established in Ireland in 1961, there are now 25 Samaritans branches across Ireland with more than 2,000 active volunteers.",
       "latitude": 53.3556,
       "longitude": -6.2558,
@@ -363,6 +363,7 @@
         "address": false,
         "hours": false,
         "email": false,
+        "website": true,
         "description": false
       },
       "activityMatchCount": 9
@@ -371,7 +372,7 @@
       "id": "crosscare",
       "name": "Crosscare",
       "url": "https://crosscare.ie/",
-      "scrapedAt": "2026-09-12T12:51:59.254Z",
+      "scrapedAt": "2026-09-12T22:00:20.857Z",
       "phone": "+353-1-874-1919",
       "phoneAll": [
         "+353-1-874-1919"
@@ -452,7 +453,7 @@
       "id": "mendicity-institution",
       "name": "Mendicity Institution",
       "url": "https://www.mendicity.org/",
-      "scrapedAt": "2026-09-12T12:52:02.239Z",
+      "scrapedAt": "2026-09-12T22:00:27.789Z",
       "phone": "01-6773308",
       "phoneAll": [
         "01-6773308"
@@ -521,7 +522,150 @@
         "description": false
       },
       "activityMatchCount": 10
+    },
+    {
+      "id": "peter-mcverry-trust",
+      "name": "Peter McVerry Trust",
+      "url": "https://www.petermcverrytrust.org/",
+      "scrapedAt": "2026-09-12T22:00:43.581Z",
+      "phone": "+353-1-878-0404",
+      "phoneAll": [
+        "+353-1-878-0404"
+      ],
+      "address": "10 South Cumberland Street, Dublin 1",
+      "addressAll": [
+        "10 South Cumberland Street, Dublin 1"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "email": "info@petermcverrytrust.org",
+      "website": "https://www.petermcverrytrust.org/",
+      "description": "",
+      "latitude": 53.3491,
+      "longitude": -6.2617,
+      "tags": [
+        "homelessness",
+        "housing",
+        "addiction",
+        "support",
+        "youth"
+      ],
+      "services": [
+        "homelessness",
+        "housing",
+        "support",
+        "addiction"
+      ],
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "category": "Housing Support",
+      "dataSource": "fallback",
+      "scrapeSuccess": false,
+      "error": "getaddrinfo ENOTFOUND www.petermcverrytrust.org"
+    },
+    {
+      "id": "cope-ireland",
+      "name": "COPE Ireland",
+      "url": "https://www.copeireland.ie/",
+      "scrapedAt": "2026-09-12T22:01:01.578Z",
+      "phone": "+353-1-874-1141",
+      "phoneAll": [
+        "+353-1-874-1141"
+      ],
+      "address": "22 North Cumberland Street, Dublin 1",
+      "addressAll": [
+        "22 North Cumberland Street, Dublin 1"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "email": "info@copeireland.ie",
+      "website": "https://www.copeireland.ie/",
+      "description": "",
+      "latitude": 53.3528,
+      "longitude": -6.2605,
+      "tags": [
+        "elderly",
+        "community",
+        "support",
+        "health",
+        "carers"
+      ],
+      "services": [
+        "elderly",
+        "community",
+        "support",
+        "health"
+      ],
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "category": "Community Support",
+      "dataSource": "fallback",
+      "scrapeSuccess": false,
+      "error": "getaddrinfo ENOTFOUND www.copeireland.ie"
+    },
+    {
+      "id": "simon-community-employment",
+      "name": "Simon Community Employment",
+      "url": "https://www.simoncommunity.ie/employment/",
+      "scrapedAt": "2026-09-12T22:01:19.713Z",
+      "phone": "+353-1-674-5656",
+      "phoneAll": [
+        "+353-1-674-5656"
+      ],
+      "address": "115 Capel Street, Dublin 1",
+      "addressAll": [
+        "115 Capel Street, Dublin 1"
+      ],
+      "hours": {
+        "mon-fri": "09:00-17:30"
+      },
+      "email": "info@simoncommunity.ie",
+      "website": "https://www.simoncommunity.ie/employment/",
+      "description": "",
+      "latitude": 53.3492,
+      "longitude": -6.2689,
+      "tags": [
+        "employment",
+        "training",
+        "homelessness",
+        "support",
+        "community"
+      ],
+      "services": [
+        "employment",
+        "training",
+        "support",
+        "homelessness"
+      ],
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "category": "Community Support",
+      "dataSource": "fallback",
+      "scrapeSuccess": false,
+      "error": ""
     }
   ],
-  "errors": []
+  "errors": [
+    {
+      "id": "peter-mcverry-trust",
+      "name": "Peter McVerry Trust",
+      "url": "https://www.petermcverrytrust.org/",
+      "error": "getaddrinfo ENOTFOUND www.petermcverrytrust.org"
+    },
+    {
+      "id": "cope-ireland",
+      "name": "COPE Ireland",
+      "url": "https://www.copeireland.ie/",
+      "error": "getaddrinfo ENOTFOUND www.copeireland.ie"
+    },
+    {
+      "id": "simon-community-employment",
+      "name": "Simon Community Employment",
+      "url": "https://www.simoncommunity.ie/employment/",
+      "error": ""
+    }
+  ],
+  "discovered": []
 }
