@@ -1,5 +1,5 @@
 import { loadServices, getAllServices, searchServices, filterByCategory } from './services.js';
-import { initMap } from './map.js';
+import init, { handleThemeChange } from './map.js';
 import { init as initDirectory } from './directory.js';
 import { init as initTimetable } from './timetable.js';
 import { init as initGuide } from './guide.js';
@@ -30,7 +30,7 @@ class DublinLifelineApp {
   }
 
   async initModules() {
-    try { initMap(); } catch (_) {}
+    try { await init(); } catch (_) {}
     try { initDirectory(); } catch (_) {}
     try { initTimetable(); } catch (_) {}
     try { initGuide(); } catch (_) {}
@@ -59,13 +59,14 @@ class DublinLifelineApp {
       if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '☾ Dark';
     }
     if (btn) {
-      btn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('dublin-lifeline-theme', next);
-        btn.textContent = next === 'dark' ? '☀️ Light' : '☾ Dark';
-      });
+btn.addEventListener('click', () => {
+         const current = document.documentElement.getAttribute('data-theme');
+         const next = current === 'dark' ? 'light' : 'dark';
+         document.documentElement.setAttribute('data-theme', next);
+         localStorage.setItem('dublin-lifeline-theme', next);
+         btn.textContent = next === 'dark' ? '☀️ Light' : '☾ Dark';
+         handleThemeChange();
+       });
     }
   }
 
