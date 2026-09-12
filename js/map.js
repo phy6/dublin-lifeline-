@@ -87,3 +87,4 @@ export async function init() {
 }
 
 export default init;
+export { markersLayer };
