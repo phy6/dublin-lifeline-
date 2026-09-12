@@ -1,5 +1,5 @@
 import { loadServices } from './services.js';
-import init, { handleThemeChange } from './map.js';
+import init, { handleThemeChange, requestGPS } from './map.js';
 import { init as initDirectory } from './directory.js';
 import { init as initTimetable } from './timetable.js';
 import { init as initGuide } from './guide.js';
@@ -27,6 +27,7 @@ class DublinLifelineApp {
     await this.initModules();
     this.handleRoute();
     this.setupOfflineIndicator();
+    this.setupGPS();
     this.registerServiceWorker();
   }
 
@@ -58,6 +59,9 @@ class DublinLifelineApp {
     if (saved) {
       document.documentElement.setAttribute('data-theme', saved);
       if (btn) btn.textContent = saved === 'dark' ? '☀️ Light' : '☾ Dark';
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      document.documentElement.setAttribute('data-theme', 'light');
+      if (btn) btn.textContent = '☾ Dark';
     }
     if (btn) {
 btn.addEventListener('click', () => {
@@ -86,6 +90,11 @@ btn.addEventListener('click', () => {
     });
     window.addEventListener('hashchange', () => this.handleRoute());
     window.addEventListener('load', () => this.handleRoute());
+  }
+
+  setupGPS() {
+    const btn = document.getElementById('gpsBtn');
+    if (btn) btn.addEventListener('click', () => requestGPS());
   }
 
   setupOfflineIndicator() {

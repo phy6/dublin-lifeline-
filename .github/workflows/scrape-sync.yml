@@ -74,11 +74,11 @@ jobs:
             import fs from 'fs';
             const r = JSON.parse(fs.readFileSync('./data/merge_report.json','utf8'));
             const { additions, updates, deletions } = r.mergeStats;
-            console.log('::set-output name=additions::' + additions);
-            console.log('::set-output name=updates::' + updates);
-            console.log('::set-output name=deletions::' + deletions);
-            console.log('::set-output name=totalServices::' + r.finalServices.length);
-            console.log('::set-output name=differences::' + r.differences);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'additions=' + additions + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'updates=' + updates + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'deletions=' + deletions + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'totalServices=' + r.finalServices.length + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'differences=' + r.differences + '\n');
           "
 
       - name: Create commit summary

@@ -169,7 +169,7 @@
         "218-222 Phibsborough Road, Dublin 7"
       ],
       "hours": {
-        "0": "{\"mon-fri\":\"09:00-17:30\"}"
+        "mon-fri": "09:00-17:30"
       },
       "email": "info@focusireland.ie",
       "website": "https://www.focusireland.ie/",

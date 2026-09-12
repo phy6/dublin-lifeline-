@@ -414,8 +414,6 @@
       "email": "info@focusireland.ie",
       "website": "https://www.focusireland.ie/",
       "hours": {
-        "0": "{\"mon-fri\":\"09:00-17:30\"}",
-        "default": "09:00-17:30",
         "mon-fri": "09:00-17:30"
       },
       "tags": [

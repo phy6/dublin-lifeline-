@@ -120,7 +120,7 @@ function renderDayGrid(grid) {
 function renderWeekGrid(grid) {
   let html = '<div class="week-grid">';
   for (let i = 0; i < 7; i++) {
-    const providers = getServicesForDay(i);
+    const providers = getServicesForDay(DAY_KEYS[i]);
     const label = getDayLabel(i);
     html += `<div class="day-box"><div class="day-name">${label}</div>`;
     const showProviders = providers.slice(0, 3);
@@ -154,7 +154,7 @@ function renderMonthGrid(grid) {
     const isToday = d === today.getDate() && month === today.getMonth();
     const date = new Date(year, month, d);
     const dayIndex = date.getDay() === 0 ? 6 : date.getDay() - 1;
-    const providers = getServicesForDay(dayIndex);
+    const providers = getServicesForDay(DAY_KEYS[dayIndex]);
     html += `<div class="cell${isToday ? ' today' : ''}"><div class="day-num">${d}</div>`;
     providers.slice(0, 2).forEach(p => {
       html += `<div style="font-size:11px;color:var(--muted)">${escapeHtml(p.name)}</div>`;

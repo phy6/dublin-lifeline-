@@ -165,7 +165,7 @@ class DataMerger {
         merged.phone = existing.phone || updated.phone;
         merged.email = existing.email || updated.email;
         merged.website = existing.website || updated.website;
-        merged.hours = { ...existing.hours, ...updated.hours };
+        merged.hours = { ...updated.hours, ...existing.hours };
         merged.tags = [...new Set([...(existing.tags || []), ...(updated.tags || [])])];
         merged.services = [...new Set([...(existing.services || []), ...(updated.services || [])])];
         merged.category = existing.category || updated.category;

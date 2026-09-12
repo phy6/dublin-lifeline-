@@ -74,6 +74,25 @@ export function handleThemeChange() {
   }
 }
 
+export function requestGPS() {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      if (map) map.setView([latitude, longitude], 15);
+      const gpsMarker = L.marker([latitude, longitude]).addTo(map);
+      gpsMarker.bindPopup('📍 Your location').openPopup();
+      const locText = document.getElementById('locationText');
+      if (locText) locText.textContent = `📍 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+    },
+    () => alert('Unable to retrieve your location. Please check permissions.'),
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
 export async function init() {
   initMap();
   try {

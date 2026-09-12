@@ -68,6 +68,11 @@
     </nav>
 
     <section id="homePage" class="page-view active" role="tabpanel" aria-labelledby="tab-homePage">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:10px">
+        <span id="locationText" style="font-size:0.85rem;color:var(--muted)">📍 Dublin City Centre</span>
+        <button id="gpsBtn" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:700;font-size:0.85rem">📍 Use GPS</button>
+      </div>
+      <p style="font-size:0.72rem;color:var(--muted);margin:-4px 0 8px">GPS location stays on this device only — never stored or sent to any server.</p>
       <div id="map" aria-label="Dublin map"></div>
       <div id="directory-container">
         <div id="loadingIndicator" style="text-align:center;padding:2rem;color:var(--muted)">Loading services…</div>
