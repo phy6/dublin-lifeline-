@@ -7,3 +7,46 @@
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; }
 .modal-overlay[style*="flex"], .modal-overlay.show { display: flex; }
 .modal-box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; max-width: 500px; margin: auto; }
+
+/* Theme variables */
+:root {
+  --bg: #0d1117;
+  --panel: #151b23;
+  --text: #f4f7fa;
+  --muted: #b8c1cb;
+  --line: #38424d;
+  --accent: #62a8ff;
+  --accent2: #4ee09b;
+  --danger: #ff6d7a;
+  --warn: #ffc266;
+  --chip: #202934;
+  --shadow: 0 2px 14px rgba(0,0,0,.35);
+}
+
+[data-theme="light"] {
+  --bg: #f7f8fa;
+  --panel: #fff;
+  --text: #101318;
+  --muted: #505a66;
+  --line: #c7cdd4;
+  --accent: #005fcc;
+  --accent2: #007a45;
+  --danger: #b00020;
+  --warn: #9a4d00;
+  --chip: #eef2f6;
+  --shadow: 0 2px 12px rgba(0,0,0,.10);
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --panel: #151b23;
+  --text: #f4f7fa;
+  --muted: #b8c1cb;
+  --line: #38424d;
+  --accent: #62a8ff;
+  --accent2: #4ee09b;
+  --danger: #ff6d7a;
+  --warn: #ffc266;
+  --chip: #202934;
+  --shadow: 0 2px 14px rgba(0,0,0,.35);
+}

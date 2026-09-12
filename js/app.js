@@ -1,4 +1,4 @@
-import { loadServices, getAllServices, searchServices, filterByCategory } from './services.js';
+import { loadServices } from './services.js';
 import init, { handleThemeChange } from './map.js';
 import { init as initDirectory } from './directory.js';
 import { init as initTimetable } from './timetable.js';
@@ -30,10 +30,10 @@ class DublinLifelineApp {
   }
 
   async initModules() {
-    try { await init(); } catch (_) {}
-    try { initDirectory(); } catch (_) {}
-    try { initTimetable(); } catch (_) {}
-    try { initGuide(); } catch (_) {}
+    try { await init(); } catch (err) { console.error('[App] Map init failed:', err); }
+    try { initDirectory(); } catch (err) { console.error('[App] Directory init failed:', err); }
+    try { initTimetable(); } catch (err) { console.error('[App] Timetable init failed:', err); }
+    try { initGuide(); } catch (err) { console.error('[App] Guide init failed:', err); }
   }
 
   handleRoute() {
@@ -74,6 +74,9 @@ btn.addEventListener('click', () => {
     const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
+        const pageId = tab.getAttribute('aria-controls');
+        const route = Object.entries(PAGES).find(([_, id]) => id === pageId)?.[0] || '#/map';
+        window.location.hash = route;
         tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
@@ -81,6 +84,7 @@ btn.addEventListener('click', () => {
       });
     });
     window.addEventListener('hashchange', () => this.handleRoute());
+    window.addEventListener('load', () => this.handleRoute());
   }
 
   registerServiceWorker() {
