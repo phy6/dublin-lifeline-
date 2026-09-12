@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASELINE_PATH = path.join(__dirname, '..', 'data', 'services.json');
 const SCRAPED_PATH = path.join(__dirname, '..', 'data', 'scraped_output.json');
 const REPORT_PATH = path.join(__dirname, '..', 'data', 'merge_report.json');
@@ -156,21 +158,25 @@ class DataMerger {
       } else {
         const existing = baselineMap.get(id);
         const updated = this.toServiceEntry(scraped);
-        const merged = { ...existing, ...updated };
+        const merged = { ...existing };
         merged.id = id;
-        merged.latitude = updated.latitude !== null && updated.latitude !== undefined ? updated.latitude : (existing.latitude || null);
-        merged.longitude = updated.longitude !== null && updated.longitude !== undefined ? updated.longitude : (existing.longitude || null);
-        merged.name = updated.name || existing.name;
-        merged.address = updated.address || existing.address;
-        merged.phone = updated.phone || existing.phone;
+        merged.name = existing.name || updated.name;
+        merged.address = existing.address || updated.address;
+        merged.phone = existing.phone || updated.phone;
+        merged.email = existing.email || updated.email;
+        merged.website = existing.website || updated.website;
         merged.hours = { ...existing.hours, ...updated.hours };
-        merged.email = updated.email || existing.email;
-        merged.tags = [...new Set([...(updated.tags || []), ...(existing.tags || [])])];
-        merged.services = [...new Set([...(updated.services || []), ...(existing.services || [])])];
-        merged.category = updated.category || existing.category;
+        merged.tags = [...new Set([...(existing.tags || []), ...(updated.tags || [])])];
+        merged.services = [...new Set([...(existing.services || []), ...(updated.services || [])])];
+        merged.category = existing.category || updated.category;
+        merged.latitude = existing.latitude !== null && existing.latitude !== undefined ? existing.latitude : (updated.latitude || null);
+        merged.longitude = existing.longitude !== null && existing.longitude !== undefined ? existing.longitude : (updated.longitude || null);
         merged.dynamicActivities = updated.dynamicActivities || [];
+        merged.activityMatchCount = updated.activityMatchCount || 0;
         merged.dataSource = 'scraped';
         merged.lastScraped = scraped.scrapedAt;
+        merged.description = existing.description || updated.description;
+        merged.lastVerified = existing.lastVerified || new Date().toISOString().split('T')[0];
         baselineMap.set(id, merged);
       }
     }
@@ -247,11 +253,12 @@ class DataMerger {
 
   saveReport(report) {
     fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2), 'utf-8');
+    console.log(`[Merge] Merge report saved to ${REPORT_PATH}`);
   }
 
   saveFinal(report) {
     const finalData = {
-      version: this.baseline.version,
+      version: '3.0.0',
       lastUpdated: new Date().toISOString(),
       generatedBy: 'Dublin Lifeline Pipeline',
       services: report.finalServices,
@@ -317,4 +324,4 @@ main().catch(err => {
   process.exit(1);
 });
 
-module.exports = { DataMerger };
+export { DataMerger };

@@ -1,26 +1,291 @@
 {
-  "generatedAt": "2026-09-12T12:52:02.549Z",
+  "generatedAt": "2026-09-12T22:54:18.058Z",
   "pipeline": "Dublin Lifeline Data Merge",
-  "baselineVersion": "1.0.0",
-  "scrapedVersion": "2.0.0",
+  "baselineVersion": "3.0.0",
+  "scrapedVersion": "3.0.0",
   "mergeStats": {
     "additions": 0,
-    "updates": 0,
+    "updates": 9,
     "deletions": 0,
-    "differences": 0
+    "differences": 9
   },
-  "differences": 0,
+  "differences": 9,
   "summary": {
-    "totalBaseline": 7,
-    "totalScraped": 7,
+    "totalBaseline": 10,
+    "totalScraped": 10,
     "additions": 0,
-    "updates": 0,
+    "updates": 9,
     "deletions": 0,
-    "unchanged": 7
+    "unchanged": 1
   },
   "changes": {
     "additions": [],
-    "updates": [],
+    "updates": [
+      {
+        "id": "capuchin-day-centre",
+        "changes": [
+          {
+            "field": "category",
+            "baseline": "Emergency Shelter",
+            "scraped": "Community Support"
+          }
+        ]
+      },
+      {
+        "id": "merchants-quay-ireland",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-524-0160",
+            "scraped": "01 524 0160"
+          },
+          {
+            "field": "category",
+            "baseline": "Addiction Support",
+            "scraped": "Emergency Shelter"
+          }
+        ]
+      },
+      {
+        "id": "focus-ireland",
+        "changes": [
+          {
+            "field": "category",
+            "baseline": "Housing Support",
+            "scraped": "Emergency Shelter"
+          }
+        ]
+      },
+      {
+        "id": "dublin-simon-community",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-671-5551",
+            "scraped": "(01) 671 5551"
+          }
+        ]
+      },
+      {
+        "id": "samaritans-ireland",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-161-123",
+            "scraped": "116 123"
+          },
+          {
+            "field": "tags",
+            "baseline": [
+              "emergency",
+              "legal",
+              "support",
+              "wellbeing",
+              "crisis",
+              "mental-health",
+              "helpline",
+              "men",
+              "volunteer"
+            ],
+            "scraped": [
+              "emergency",
+              "legal",
+              "support",
+              "wellbeing",
+              "men",
+              "volunteer",
+              "crisis",
+              "mental-health",
+              "helpline"
+            ]
+          },
+          {
+            "field": "category",
+            "baseline": "Crisis Support",
+            "scraped": "Emergency Shelter"
+          }
+        ]
+      },
+      {
+        "id": "crosscare",
+        "changes": [
+          {
+            "field": "category",
+            "baseline": "Community Support",
+            "scraped": "Emergency Shelter"
+          }
+        ]
+      },
+      {
+        "id": "mendicity-institution",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-677-3308",
+            "scraped": "01-6773308"
+          },
+          {
+            "field": "tags",
+            "baseline": [
+              "homeless",
+              "food",
+              "shelter",
+              "recovery",
+              "legal",
+              "support",
+              "elderly",
+              "family",
+              "volunteer",
+              "community",
+              "social"
+            ],
+            "scraped": [
+              "homeless",
+              "food",
+              "shelter",
+              "recovery",
+              "legal",
+              "support",
+              "family",
+              "volunteer",
+              "elderly",
+              "community",
+              "social"
+            ]
+          },
+          {
+            "field": "category",
+            "baseline": "Community Support",
+            "scraped": "Emergency Shelter"
+          }
+        ]
+      },
+      {
+        "id": "peter-mcverry-trust",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-872-2222",
+            "scraped": "+353-1-878-0404"
+          },
+          {
+            "field": "address",
+            "baseline": "8 North Richmond Street, Dublin 1",
+            "scraped": "10 South Cumberland Street, Dublin 1"
+          },
+          {
+            "field": "tags",
+            "baseline": [
+              "housing",
+              "youth",
+              "homelessness",
+              "support",
+              "addiction"
+            ],
+            "scraped": [
+              "homelessness",
+              "housing",
+              "addiction",
+              "support",
+              "youth"
+            ]
+          },
+          {
+            "field": "services",
+            "baseline": [
+              "housing",
+              "homelessness",
+              "youth",
+              "support",
+              "addiction",
+              "community"
+            ],
+            "scraped": [
+              "homelessness",
+              "housing",
+              "support",
+              "addiction"
+            ]
+          },
+          {
+            "field": "latitude",
+            "baseline": 53.3545,
+            "scraped": 53.3491
+          },
+          {
+            "field": "longitude",
+            "baseline": -6.2553,
+            "scraped": -6.2617
+          }
+        ]
+      },
+      {
+        "id": "simon-community-employment",
+        "changes": [
+          {
+            "field": "phone",
+            "baseline": "+353-1-671-5551",
+            "scraped": "+353-1-674-5656"
+          },
+          {
+            "field": "address",
+            "baseline": "Multiple locations across Dublin",
+            "scraped": "115 Capel Street, Dublin 1"
+          },
+          {
+            "field": "tags",
+            "baseline": [
+              "employment",
+              "training",
+              "homelessness",
+              "community",
+              "support"
+            ],
+            "scraped": [
+              "employment",
+              "training",
+              "homelessness",
+              "support",
+              "community"
+            ]
+          },
+          {
+            "field": "services",
+            "baseline": [
+              "employment",
+              "training",
+              "education",
+              "housing",
+              "community",
+              "support",
+              "outreach",
+              "homelessness"
+            ],
+            "scraped": [
+              "employment",
+              "training",
+              "support",
+              "homelessness"
+            ]
+          },
+          {
+            "field": "category",
+            "baseline": "Employment Support",
+            "scraped": "Community Support"
+          },
+          {
+            "field": "latitude",
+            "baseline": 53.3496,
+            "scraped": 53.3492
+          },
+          {
+            "field": "longitude",
+            "baseline": -6.2687,
+            "scraped": -6.2689
+          }
+        ]
+      }
+    ],
     "deletions": []
   },
   "finalServices": [
@@ -36,6 +301,15 @@
         "sat": "09:00-13:00",
         "sun": "closed"
       },
+      "tags": [
+        "homeless",
+        "food",
+        "medical",
+        "support",
+        "family",
+        "children",
+        "emergency"
+      ],
       "services": [
         "food",
         "shelter",
@@ -48,21 +322,11 @@
         "information",
         "policy"
       ],
-      "tags": [
-        "homeless",
-        "food",
-        "medical",
-        "support",
-        "family",
-        "children",
-        "emergency"
-      ],
-      "category": "Community Support",
+      "category": "Emergency Shelter",
       "latitude": 53.3481,
       "longitude": -6.2758,
-      "lastScraped": "2026-09-12T12:51:47.536Z",
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
+      "description": "Capuchin Day Centre provides emergency shelter, food, medical care, and support services to people experiencing homelessness and poverty in Dublin.",
+      "lastVerified": "2026-09-10",
       "dynamicActivities": [
         "food",
         "medical",
@@ -73,14 +337,16 @@
         "information",
         "policy"
       ],
-      "activityMatchCount": 8
+      "activityMatchCount": 8,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:16.962Z"
     },
     {
       "id": "merchants-quay-ireland",
       "name": "Merchants Quay Ireland",
       "address": "8 Merchants Quay, Dublin 8",
-      "phone": "01 524 0160",
-      "email": "fundraising@mqi.ie",
+      "phone": "+353-1-524-0160",
+      "email": "info@mqi.ie",
       "website": "https://mqi.ie/",
       "hours": {
         "mon-fri": "09:00-17:00"
@@ -115,12 +381,11 @@
         "policy",
         "research"
       ],
-      "category": "Emergency Shelter",
+      "category": "Addiction Support",
       "latitude": 53.3449,
       "longitude": -6.2733,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:51:48.775Z",
+      "description": "Merchants Quay Ireland provides addiction treatment, recovery services, and support for people affected by substance misuse in Dublin.",
+      "lastVerified": "2026-09-11",
       "dynamicActivities": [
         "food",
         "medical",
@@ -137,7 +402,9 @@
         "policy",
         "research"
       ],
-      "activityMatchCount": 14
+      "activityMatchCount": 14,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:22.585Z"
     },
     {
       "id": "focus-ireland",
@@ -147,6 +414,7 @@
       "email": "info@focusireland.ie",
       "website": "https://www.focusireland.ie/",
       "hours": {
+        "0": "{\"mon-fri\":\"09:00-17:30\"}",
         "default": "09:00-17:30",
         "mon-fri": "09:00-17:30"
       },
@@ -160,25 +428,26 @@
         "housing",
         "support"
       ],
-      "category": "Emergency Shelter",
+      "category": "Housing Support",
       "latitude": 53.3592,
       "longitude": -6.2742,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:51:54.896Z",
+      "description": "Focus Ireland provides housing support and homelessness services, helping people find and maintain stable accommodation across Dublin.",
+      "lastVerified": "2026-09-12",
       "dynamicActivities": [
         "housing",
         "homelessness",
         "support"
       ],
-      "activityMatchCount": 3
+      "activityMatchCount": 3,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:40.120Z"
     },
     {
       "id": "dublin-simon-community",
       "name": "Dublin Simon Community",
       "address": "85 Capel Street, Dublin 1",
-      "phone": "(01) 671 5551",
-      "email": "fundraising@dubsimon.ie",
+      "phone": "+353-1-671-5551",
+      "email": "info@dubsimon.ie",
       "website": "https://www.dubsimon.ie",
       "hours": {
         "mon-fri": "09:00-17:30"
@@ -224,9 +493,8 @@
       "category": "Emergency Shelter",
       "latitude": 53.3496,
       "longitude": -6.2687,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:51:56.341Z",
+      "description": "Dublin Simon Community provides emergency accommodation, homelessness services, and support for vulnerable people in Dublin city centre.",
+      "lastVerified": "2026-09-11",
       "dynamicActivities": [
         "medical",
         "counselling",
@@ -246,13 +514,15 @@
         "policy",
         "research"
       ],
-      "activityMatchCount": 17
+      "activityMatchCount": 17,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:46.561Z"
     },
     {
       "id": "samaritans-ireland",
       "name": "Samaritans Ireland",
       "address": "191 Great Denmark Street, Dublin 1",
-      "phone": "116 123",
+      "phone": "+353-1-161-123",
       "email": "dublin@samaritans.ie",
       "website": "https://www.samaritans.org/ireland/samaritans-ireland/",
       "hours": {
@@ -263,11 +533,11 @@
         "legal",
         "support",
         "wellbeing",
-        "men",
-        "volunteer",
         "crisis",
         "mental-health",
-        "helpline"
+        "helpline",
+        "men",
+        "volunteer"
       ],
       "services": [
         "mental-health",
@@ -283,12 +553,11 @@
         "policy",
         "research"
       ],
-      "category": "Emergency Shelter",
+      "category": "Crisis Support",
       "latitude": 53.3556,
       "longitude": -6.2558,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:51:57.525Z",
+      "description": "Samaritans Ireland provides confidential emotional support 24/7 for people experiencing distress or suicidal thoughts, via phone and in-person.",
+      "lastVerified": "2026-09-13",
       "dynamicActivities": [
         "emergency",
         "support",
@@ -300,7 +569,9 @@
         "policy",
         "research"
       ],
-      "activityMatchCount": 9
+      "activityMatchCount": 9,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:52.321Z"
     },
     {
       "id": "crosscare",
@@ -342,12 +613,11 @@
         "policy",
         "information"
       ],
-      "category": "Emergency Shelter",
+      "category": "Community Support",
       "latitude": 53.3533,
       "longitude": -6.2625,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:51:59.254Z",
+      "description": "Crosscare provides community support services including food, housing advice, counselling, and welfare assistance across Dublin.",
+      "lastVerified": "2026-09-12",
       "dynamicActivities": [
         "food",
         "counselling",
@@ -364,13 +634,15 @@
         "policy",
         "information"
       ],
-      "activityMatchCount": 14
+      "activityMatchCount": 14,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:03:58.866Z"
     },
     {
       "id": "mendicity-institution",
       "name": "Mendicity Institution",
       "address": "115 Usher's Island, Dublin 8",
-      "phone": "01-6773308",
+      "phone": "+353-1-677-3308",
       "email": "info@mendicity.org",
       "website": "https://www.mendicity.org/services/",
       "hours": {
@@ -383,9 +655,9 @@
         "recovery",
         "legal",
         "support",
+        "elderly",
         "family",
         "volunteer",
-        "elderly",
         "community",
         "social"
       ],
@@ -403,12 +675,11 @@
         "policy",
         "information"
       ],
-      "category": "Emergency Shelter",
+      "category": "Community Support",
       "latitude": 53.3461,
       "longitude": -6.2818,
-      "dataSource": "scraped",
-      "scrapeSuccess": true,
-      "lastScraped": "2026-09-12T12:52:02.239Z",
+      "description": "Mendicity Institution provides daily meals, shelter, and support services to people experiencing poverty and homelessness on Dublin's south side.",
+      "lastVerified": "2026-09-11",
       "dynamicActivities": [
         "food",
         "shelter",
@@ -421,10 +692,117 @@
         "policy",
         "information"
       ],
-      "activityMatchCount": 10
+      "activityMatchCount": 10,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:04:06.018Z"
+    },
+    {
+      "id": "peter-mcverry-trust",
+      "name": "Peter McVerry Trust",
+      "address": "8 North Richmond Street, Dublin 1",
+      "phone": "+353-1-872-2222",
+      "email": "info@peterpmv.ie",
+      "website": "https://www.peterpmv.ie/",
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "tags": [
+        "housing",
+        "youth",
+        "homelessness",
+        "support",
+        "addiction"
+      ],
+      "services": [
+        "housing",
+        "homelessness",
+        "youth",
+        "support",
+        "addiction",
+        "community"
+      ],
+      "category": "Housing Support",
+      "latitude": 53.3545,
+      "longitude": -6.2553,
+      "description": "Peter McVerry Trust provides housing support and services for young people experiencing homelessness and disadvantage in Dublin.",
+      "lastVerified": "2026-09-10",
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:04:21.668Z"
+    },
+    {
+      "id": "simon-community-employment",
+      "name": "Simon Community Employment",
+      "address": "Multiple locations across Dublin",
+      "phone": "+353-1-671-5551",
+      "email": "employment@dubsimon.ie",
+      "website": "https://www.dubsimon.ie/employment/",
+      "hours": {
+        "mon-fri": "09:00-17:30"
+      },
+      "tags": [
+        "employment",
+        "training",
+        "homelessness",
+        "community",
+        "support"
+      ],
+      "services": [
+        "employment",
+        "training",
+        "education",
+        "housing",
+        "community",
+        "support",
+        "outreach",
+        "homelessness"
+      ],
+      "category": "Employment Support",
+      "latitude": 53.3496,
+      "longitude": -6.2687,
+      "description": "Simon Community Employment provides training, education, and employment pathways for people experiencing homelessness and disadvantage across Dublin.",
+      "lastVerified": "2026-09-08",
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "dataSource": "scraped",
+      "lastScraped": "2026-09-12T22:04:57.822Z"
+    },
+    {
+      "id": "cope-ireland",
+      "name": "COPE Ireland",
+      "address": "22 North Cumberland Street, Dublin 1",
+      "phone": "+353-1-874-1141",
+      "email": "info@copeireland.ie",
+      "website": "https://www.copeireland.ie/",
+      "hours": {
+        "mon-fri": "09:00-17:00"
+      },
+      "tags": [
+        "elderly",
+        "community",
+        "support",
+        "health",
+        "carers"
+      ],
+      "services": [
+        "elderly",
+        "community",
+        "support",
+        "health"
+      ],
+      "dynamicActivities": [],
+      "activityMatchCount": 0,
+      "category": "Community Support",
+      "latitude": 53.3528,
+      "longitude": -6.2605,
+      "dataSource": "scraped",
+      "scrapeSuccess": false,
+      "lastScraped": "2026-09-12T22:04:39.668Z",
+      "lastVerified": "2026-09-12"
     }
   ],
   "notes": [
-    "No changes detected. Baseline data is current."
+    "INFO: 9 service(s) updated with new data"
   ]
 }
